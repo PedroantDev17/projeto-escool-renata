@@ -1,21 +1,86 @@
+*{
+    margin: 0;
+    padding: 0;
+}
 body{
     background-color:#D9814E;
-}
-h1{
-    color:#F2F2F0 ;
-    background-color: #93B7BF;
-    text-align: center;
     font-family: Arial, Helvetica, sans-serif;
+    }
+
+header{
+    display: grid;
+        background-color: #93B7BF;
+    }
+
+header h1{
+    color:#F2F2F0 ;
+    text-align: center;
+    margin: 10px 0px 10px 0px;
+    text-shadow: 1px 2px 3px black;
+}
+
+menu{
+        display: grid;
+    background-color: #ebad87;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-items: center;
+}
+
+menu h2{ 
+    margin: 10px;
     
+    color:#8C6954;
+    text-shadow: 1px 2px 3px black;
 }
-h2{ 
-    color:#8C6954 ;
+
+menu h2:hover{
+    font-size: 2em;
+    transition: 0.5s;
+    
+    cursor: pointer;
 }
-p{
-    color:black ;
+
+menu >p {
+    font-size: 25px;
+    
+    box-shadow: 1px 2px 4px black;
+    
+    cursor: pointer;
+}
+main{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+main > div {
+    display: inline;
+    margin: 10px;
+    padding: 10px;
+    
+    background-color: white;
+    
+    box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 1);
+    transition: all 0.3s ease-in-out;
+}
+main > div:hover{
+    transform: scale(1.09); 
+    filter: brightness(1.1);
+}
+
+div > img{
+    width: 216px;
+    height: 212px;
+}
+
+    #container > div > p{
+    text-align: center;
+    
+    color:black;
 }
 
 h3{
     display: flex;
-    
 }

@@ -34,12 +34,27 @@
                 justify-items: center;
             }
 
-         menu h2{ 
+            menu h2{ 
                 margin: 10px;
+                
                 color:#8C6954;
                 text-shadow: 1px 2px 3px black;
             }
 
+            menu h2:hover{
+                font-size: 2em;
+                transition: 0.5s;
+               
+                cursor: pointer;
+            }
+
+            menu >p {
+                font-size: 25px;
+                
+                box-shadow: 1px 2px 4px black;
+                
+                cursor: pointer;
+            }
             main{
                 display: flex;
                 flex-direction: row;
@@ -49,15 +64,17 @@
 
             main > div {
                 display: inline;
-                background-color: white;
                 margin: 10px;
                 padding: 10px;
+                
+                background-color: white;
+                
                 box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 1);
+                transition: all 0.3s ease-in-out;
             }
             main > div:hover{
-                width: 300px;
-                height: 300px;
-                transition: 1.5s;
+              transform: scale(1.09); 
+              filter: brightness(1.1);
             }
 
             div > img{
@@ -67,6 +84,7 @@
 
              #container > div > p{
                 text-align: center;
+                
                 color:black;
             }
 
@@ -84,7 +102,7 @@
     <menu>
         <h2>Principais</h2>
         <h2>salgados</h2> 
-        <p>Carrinho</p>
+        <p>&#x1F6D2;</p>
         <p>Configurações</p>
     </menu>
 
