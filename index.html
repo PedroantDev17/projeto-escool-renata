@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <title>Comparador de preços</title>
+    <title>Comparador de preços</title> 
+    <link rel="stylesheet" href="https://googleapis.com" />
 </head>
 <body>
     <header>
         <img src="https://usacheer.org/wp-content/uploads/2024/04/img-academy-logo.jpg" alt="logo" width="50px">
         <nav>
             <ul>
-                <li>inicio</li>
-                <li>Como Funciona</li>
-                <li>Categorias</li>
-                <li>Favoritos</li>
-                <li>Blog</li>
+                <li><a href="#">inicio</a></li>
+                <li><a href="#">Como Funciona</a> </li>
+                <li><a href="#">Categorias</a></li>
+                <li><a href="#">Favoritos</a></li>
+                <li><a href="#">Blog</a></li>
             </ul>
             
         </nav>
@@ -28,5 +29,93 @@
                 </button>
         </div>
     </header>
+
+    <main id="container">
+        <div class="Text_principal">
+            <h1>Compare preços.</h1>
+            <h1><span>Economize</span> sempre.</h1>
+            <p>Encontre o menor preço do produto que você procura <br> entre centenas de lojas confiáveis</p>
+        </div>
+            <div class="elementos">
+                <div class="inputs">
+                    <input type="text"
+                    id="Produtos"
+                    name="Produto"
+                    list="produtos_eletronicos" placeholder="Digite o nome do produto...">
+                    <datalist id="produtos_eletronicos">                  <!-- Smartphones -->
+                            <option value="iPhone 15 Pro Max"></option>
+                            <option value="iPhone 14 128GB"></option>
+                            <option value="Samsung Galaxy S24 Ultra"></option>
+                            <option value="Samsung Galaxy A55"></option>
+                            <option value="Xiaomi Redmi Note 13"></option>
+                            <!-- Informática -->
+                            <option value="Notebook Dell Inspiron i15"></option>
+                            <option value="MacBook Air M2 Apple"></option>
+                            <option value="Monitor Gamer 24 Full HD"></option>
+                            <option value="SSD Kingston 1TB NVMe"></option>
+                            <option value="Teclado Mecânico RGB"></option>
+                            <!-- Áudio e Vídeo -->
+                            <option value="Smart TV 4K 55" LG OLED"></option>
+                            <option value="Smart TV 4K 50" Samsung QLED"></option>
+                            <option value="Fone Bluetooth JBL Tune"></option>
+                            <option value="AirPods Pro Apple"></option>
+                            <option value="Caixa de Som JBL Boombox 3"></option>
+                            <!-- Games -->
+                            <option value="Console PlayStation 5 Slim"></option>
+                            <option value="Console Nintendo Switch OLED"></option>
+                            <option value="Controle Sem Fio Xbox Series"></option>
+                            <option value="Jogo EA Sports FC"></option>
+                            <!-- Wearables e Casa Inteligente -->
+                            <option value="Smartwatch Apple Watch Series"></option>
+                            <option value="Smartwatch Samsung Galaxy Watch"></option>
+                            <option value="Echo Dot 5ª Geração com Alexa"></option>
+                            <option value="Lâmpada Inteligente Wi-Fi Smart"></option>
+                        </datalist>
+                        <p>ou</p>
+                        <!-- O segredo está em conectar o 'id' do input com o 'for' do label -->
+                        <label for="imagem" id="Principal_file">
+                          📥 Enviar imagem
+                        </label>
+                        <input type="file" id="imagem">
+                        <input type="submit" value="Comparar preços" >
+                </div>
+                <p class="text_bottom">Ex.iPhone 15, Notebook Dell Fone Bluetooth</p>
+            </div>
+
+            <section class="blocos">
+                <!-- Bloco 1 -->
+                <div>
+                    <span class="icone-emoji">⏱️</span>
+                    <h3>Compare em segundos</h3>
+                    <p>Buscamos em diversas lojas <br>para encontrar o menor preço.</p>
+                </div>
+
+                <!-- Bloco 2 -->
+                <div>
+                    <span class="icone-emoji">🛡️</span>
+                    <h3>Lojas confiáveis</h3>
+                    <p>Só exibimos preços de lojas <br> seguras e verificadas.</p>
+                </div>
+
+                <!-- Bloco 3 -->
+                <div>
+                    <span class="icone-emoji">📈</span>
+                    <h3>Histórico de preços</h3>
+                    <p>Veja como o preço do produto <br> variou ao longo do tempo.</p>
+                </div>
+
+                <!-- Bloco 4 -->
+                <div>
+                    <span class="icone-emoji">💙</span>
+                    <h3>Salve seus favoritos</h3>
+                    <p>Guarde produtos e receba alertas  <br>quando o preço baixar.</p>
+                </div>
+            </section>
+
+    </main>
+
+    <footer>
+        &copy;TecBan
+    </footer>
 </body>
 </html>
