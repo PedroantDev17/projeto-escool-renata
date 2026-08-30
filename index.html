@@ -1,163 +1,32 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Principal</title>
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-        }
-        body{
-            background-color:#D9814E;
-            font-family: Arial, Helvetica, sans-serif;
-            }
-        
-        header{
-            display: grid;
-             background-color: #93B7BF;
-            }
-
-         header h1{
-                color:#F2F2F0 ;
-                text-align: center;
-                margin: 10px 0px 10px 0px;
-                text-shadow: 1px 2px 3px black;
-            }
-
-            menu{
-                 display: grid;
-                background-color: #ebad87;
-                grid-auto-flow: column;
-                align-items: center;
-                justify-items: center;
-            }
-
-            menu h2,a{ 
-                margin: 10px;
-                text-decoration: none;
-                color:#8C6954;
-                text-shadow: 1px 2px 3px black;
-            }
-
-            menu h2:hover{
-                font-size: 2em;
-                transition: 0.5s;
-               
-                cursor: pointer;
-            }
-
-            menu >p {
-                font-size: 25px;
-                
-                box-shadow: 1px 2px 4px black;
-                
-                cursor: pointer;
-            }
-            main{
-                display: flex;
-                flex-direction: row;
-                justify-content: space-around;
-                flex-wrap: wrap;
-            }
-
-            main > div {
-                display: inline;
-                margin: 10px;
-                padding: 10px;
-                
-                background-color: white;
-                
-                box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 1);
-                transition: all 0.3s ease-in-out;
-            }
-            main > div:hover{
-              transform: scale(1.09); 
-              filter: brightness(1.1);
-            }
-
-            div > img{
-                width: 216px;
-                height: 212px;
-            }
-
-             #container > div > p{
-                text-align: center;
-                
-                color:black;
-            }
-
-        h3{
-                display: flex;
-            }
-    </style>
-    
+    <link rel="stylesheet" href="css/style.css">
+    <title>Comparador de preços</title>
 </head>
 <body>
     <header>
-         <h1>Estoque dos produtos</h1>
+        <img src="https://usacheer.org/wp-content/uploads/2024/04/img-academy-logo.jpg" alt="logo" width="50px">
+        <nav>
+            <ul>
+                <li>inicio</li>
+                <li>Como Funciona</li>
+                <li>Categorias</li>
+                <li>Favoritos</li>
+                <li>Blog</li>
+            </ul>
+            
+        </nav>
+        <div class="butons">
+            <button class="start">
+                    entrar
+                </button>
+                <button class="create_cont">
+                    Criar conta
+                </button>
+        </div>
     </header>
-    
-    <menu>
-        <h2>Principais</h2>
-        <h2><a href="fontes/salgados.html">salgados</a></h2> 
-        <p>&#x1F6D2;</p>
-        <p>Configurações</p>
-    </menu>
-
-        <main id="container">
-            <div class="item1">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-                <p>comida 1</p>
-            </div>
-
-            <div class="item2">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-                <p>comida 2</p>
-            </div>
-            
-            <div class="item3">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-               <p>comida 3</p>
-            
-            </div>
-            
-            <div class="item4">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-                <p>comida 4</p>
-            </div>
-
-            <div class="item5">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-                <p>comida 5</p>
-            </div>
-            
-            <div class="item6">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-                <p>comida 6</p>
-            </div>
-
-            <div class="item7">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-                <p>comida 7</p>
-            </div>
-
-            <div class="item8">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-                <p> comida 8</p>
-            </div>
-
-            <div class="item9">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-                <p>comida 9</p>
-            </div>
-
-            <div class="item10">
-                <img src="imagem produtos/ChatGPT Image 29 de abr. de 2026, 19_28_28.png" alt="Coxinha">
-                <p>1 salgado + 1 coca 200ml</p>
-            </div>
-        </main>
-
 </body>
 </html>
