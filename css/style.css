@@ -254,4 +254,82 @@ footer{
     color: rgb(43, 109, 230);
 }
 
+/* responsividade */
+
+@media screen and (max-width:500px){
+    html,body {
+        width: 100%;
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        justify-items: center;
+    }
+    header {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: space-between;
+    margin: auto 30px;
+    width: 36vh;
+}
+    main {
+    width: 100%;
+    position: relative;
+    left: 12vh;
+    
+}
+input, #Principal_file {
+    margin: 0 10px;
+    padding: 5px;
+}
+
+
+nav > ul > li {
+    margin: 0 14px;
+    list-style: none;
+}
+.tutorial-funcional .tutorial-image {
+    width: 50vh;
+}
+
+.image-eletronicos > .produtos-image {
+    width: 50vh;
+}
+
+.economia {
+    background-color: rgb(19, 19, 49);
+    display: grid;
+    border-radius: 10px;
+    padding: 10px;
+}
+.text > .criar-conta-gratis {
+    font-size: 1.5vh;
+    border: none;
+    color: #fff;
+    margin-top: 35px;
+    padding: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: var(--blue-escuro);
+    transition: 0.5s;
+}
+.text {
+    display: grid;
+    padding: 10px;
+    color: #fff;
+    justify-items: center;
+}
+
+    .blocos {
+    display: flex;
+    flex-direction: column;
+
+}
+.text-final,.image-eletronicos{
+    position: relative;
+    left: 25vh;
+}
+}
+
+
 
