@@ -126,18 +126,6 @@ input[type="file"] {
     display: none;
 }
 
-#Principal_file{
-    border: 1px solid blue;
-    border-radius: 10px;
-    color: var(--blue-escuro);
-    cursor: pointer;
-}
-#Principal_file:hover {
-    transition: 0.5s;
-    background-color: var(--blue-escuro);
-    color: white;
-}
-
 input[type="submit"]{
     background-color: var(--blue-escuro);
     color: #fff;
