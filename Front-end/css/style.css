@@ -27,6 +27,10 @@ header{
     justify-content: space-between;
     margin: auto 30px;
 }
+
+.logotipo:hover {
+    width: 6vh;
+}
 nav,ul{
     display: flex;
     flex-direction: row;
