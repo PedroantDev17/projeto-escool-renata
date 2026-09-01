@@ -8,6 +8,7 @@
 }
 html,body{
     height: 100%;
+    height: auto;
     margin: 0;
 }
 
@@ -77,7 +78,7 @@ main{
     align-items: center;
 
     justify-items: center;
-    flex: 1;
+   
 }
 .Text_principal,.blocos {
     margin: 3vh;
@@ -224,7 +225,7 @@ input[type="submit"]:hover{
 .text-final {
     
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .categorias .text-final section {
@@ -253,5 +254,104 @@ footer{
     justify-content: center;
     color: rgb(43, 109, 230);
 }
+
+/* responsividade */
+
+@media screen and (max-width:500px) {
+        header {
+        display: grid;
+        margin: auto 30px;
+        justify-items: center;
+        align-items: center;
+        grid-auto-flow: row;
+        justify-content: center;
+    }
+    img {
+        margin: 10px;
+    }
+.Text_principal{
+    align-items: center;
+    justify-items: center;
+}
+
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+}
+main > .Text_principal p {
+    line-height: 2.5vh;
+    font-size: 1.5vh;
+}
+    input, #Principal_file {
+        margin: 10px;
+        padding: 5px;
+    }
+main > .elementos .inputs {
+    display: flex;
+    justify-content: space-around;
+    padding: 2vh;
+    border-radius: 10px;
+    flex-direction: column;
+    align-items: center;
+}
+.blocos{
+    display: grid;
+
+}
+
+.tutorial-funcional .tutorial-image {
+    width: 42vh;
+}
+.economia {
+    display: grid;
+    border-radius: 10px;
+    padding: 10px;
+}
+.text{
+    display: grid;
+    justify-items: center;
+}
+.text p {
+    font-size: 1.2vh;
+}
+.economia > .image .graficos-image {
+    width: 40vh;
+}
+.text-final {
+    display: grid;
+    justify-items: center;
+    justify-content: center;
+}
+
+.image-eletronicos > .produtos-image {
+    width: 40vh;
+}
+.image-eletronicos {
+    display: grid;
+    
+    justify-items: center;
+}
+
+input[type="submit"] {
+    margin: 10px;
+    border: none;
+}
+
+input, #Principal_file {
+    margin: 0 10px;
+    padding: 5px;
+}
+
+nav > ul > li {
+    margin: 0 35px;
+    padding: 5px;
+    list-style: none;
+}
+    
+}
+
+
 
 
