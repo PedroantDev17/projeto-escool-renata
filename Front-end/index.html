@@ -42,7 +42,6 @@
                     <input type="text"
                     id="Produtos"
                     name="Produto"
-                    onclick="Produto_cliente()"
                     list="produtos_eletronicos" placeholder="Digite o nome do produto...">
                     <datalist id="produtos_eletronicos">                  <!-- Smartphones -->
                             <option value="iPhone 15 Pro Max"></option>
@@ -79,7 +78,7 @@
                           📥 Enviar imagem
                         </label>
                         <input type="file" id="imagem">
-                        <input type="submit" value="Comparar preços" >
+                        <input type="submit" value="Comparar preços" onclick="Produto_cliente()">
                 </div>
                 <p class="text_bottom">Ex:iPhone 15, Notebook Dell Fone Bluetooth</p>
             </div>
@@ -153,5 +152,6 @@
     <footer>
         &copy;TecBan
     </footer>
+    <script src="produto.js" defer></script>
 </body>
 </html>
