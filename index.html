@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Front-end/css/style.css">
     <link rel="shortcut icon" href="Front-end/favicon/favicon.ico" type="image/x-icon">
-    <title>CompareJá</title> 
+    <title>Comparaí</title> 
     <link rel="stylesheet" href="https://googleapis.com" />
-    <script src="" ></script>
 </head>
 <body>
     <header>
@@ -41,10 +40,13 @@
             <div class="elementos">
                 <div class="inputs">
                     <input type="text"
+                    minlength="4"
+                    required
                     id="Produtos"
                     name="Produto"
                     list="produtos_eletronicos" placeholder="Digite o nome do produto...">
-                    <datalist id="produtos_eletronicos">                  <!-- Smartphones -->
+                    <datalist id="produtos_eletronicos">                 
+                         <!-- Smartphones -->
                             <option value="iPhone 15 Pro Max"></option>
                             <option value="iPhone 14 128GB"></option>
                             <option value="Samsung Galaxy S24 Ultra"></option>
@@ -73,12 +75,9 @@
                             <option value="Echo Dot 5ª Geração com Alexa"></option>
                             <option value="Lâmpada Inteligente Wi-Fi Smart"></option>
                         </datalist>
-                        <p>ou</p>
+                        
                         <!-- O segredo está em conectar o 'id' do input com o 'for' do label -->
-                        <label for="imagem" id="Principal_file">
-                          📥 Enviar imagem
-                        </label>
-                        <input type="file" id="imagem">
+                    
                         <input type="submit" value="Comparar preços" onclick="Produto_cliente()">
                 </div>
                 <p class="text_bottom">Ex:iPhone 15, Notebook Dell Fone Bluetooth</p>
@@ -143,9 +142,11 @@
                     </section>
                     <a href="#">Ver todas</a>
                 </section>
-                <section class="image-eletronicos">
-                    <img src="Front-end/imagem/produtos.png" alt="produtos-categorias" class="produtos-image">
+                <!-- Crie um container vazio no HTML para receber a lista de produtos da API -->
+                <section id="container-produtos" class="vitrine-produtos">
+                    <!-- Os produtos criados via JS vão aparecer aqui dentro automaticamente -->
                 </section>
+
             </div>
 
     </main>
