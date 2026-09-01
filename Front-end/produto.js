@@ -24,9 +24,9 @@ async function Produto_cliente() {
                 const posicao = dadosRetornados.posicao;
                 const iconLoja = dadosRetornados.Icon_loja;
                 const title = dadosRetornados.title;
-                const preco = dadosRetornados.price;
-                const loja = dadosRetornados.loja_name;
-                const link = dadosRetornados.link_product;
+                const preco = dadosRetornados.preco;
+                const loja = dadosRetornados.loja;
+                const link = dadosRetornados.link;
             });
 
         } else {
