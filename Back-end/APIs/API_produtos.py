@@ -43,8 +43,8 @@ def lista_produtos():
                     "icon_loja": Icon_loja,
                     "titulo": title,
                     "preco": preco,
-                    "loja": loja,
-                    "link": link})
+                    "loja_name": loja,
+                    "link_product": link})
 
 if __name__ == '__main__':
     app.run(debug=True )
