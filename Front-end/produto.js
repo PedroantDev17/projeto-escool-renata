@@ -1,7 +1,7 @@
 async function Produto_cliente() {
     const produto = document.getElementById('Produtos');
     const valor = produto.value;
-
+// Dados enviados para API_produtos:
     const dadosParaEnviar = {
         nomeProduto: valor
     };
@@ -14,13 +14,13 @@ async function Produto_cliente() {
             },
             body: JSON.stringify(dadosParaEnviar)
         });
-
+// Dados Retornados da API_produtos: 
         if (resposta.ok) {
             const dadosRetornados = await resposta.json();
             console.log('Sucesso:', dadosRetornados);
-            
+            // Laço for para retirar do JSON:
             dadosRetornados.forEach(produto => {
-                
+                // Colocando nas Variaveis
                 const posicao = dadosRetornados.posicao;
                 const iconLoja = dadosRetornados.Icon_loja;
                 const title = dadosRetornados.title;
