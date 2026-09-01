@@ -18,6 +18,17 @@ async function Produto_cliente() {
         if (resposta.ok) {
             const dadosRetornados = await resposta.json();
             console.log('Sucesso:', dadosRetornados);
+            
+            dadosRetornados.forEach(produto => {
+                
+                const posicao = dadosRetornados.posicao;
+                const iconLoja = dadosRetornados.Icon_loja;
+                const title = dadosRetornados.title;
+                const preco = dadosRetornados.price;
+                const loja = dadosRetornados.loja_name;
+                const link = dadosRetornados.link_product;
+            });
+
         } else {
             console.log('Erro na resposta da API', resposta.status);
         } // Chave que fecha o else adicionada
