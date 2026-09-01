@@ -41,7 +41,7 @@
             <div class="elementos">
                 <div class="inputs">
                     <input type="text"
-                    maxlength="4"
+                    minlength="4"
                     required
                     id="Produtos"
                     name="Produto"
@@ -143,9 +143,11 @@
                     </section>
                     <a href="#">Ver todas</a>
                 </section>
-                <section class="image-eletronicos">
-                    <img src="Front-end/imagem/produtos.png" alt="produtos-categorias" class="produtos-image">
+                <!-- Crie um container vazio no HTML para receber a lista de produtos da API -->
+                <section id="container-produtos" class="vitrine-produtos">
+                    <!-- Os produtos criados via JS vão aparecer aqui dentro automaticamente -->
                 </section>
+
             </div>
 
     </main>
