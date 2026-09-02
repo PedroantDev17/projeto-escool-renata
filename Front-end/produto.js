@@ -20,7 +20,6 @@ async function Produto_cliente() {
             console.log('Sucesso:', dadosRetornados);
 
             dadosRetornados.forEach(produto => {
-<<<<<<< HEAD
                 // Colocando nas Variaveis
                 const posicao = dadosRetornados.posicao;
                 const iconLoja = dadosRetornados.Icon_loja;
@@ -28,32 +27,6 @@ async function Produto_cliente() {
                 const preco = dadosRetornados.preco;
                 const loja = dadosRetornados.loja;
                 const link = dadosRetornados.link;
-=======
-                // 1. Cria o container do produto
-                const divProduto = document.createElement('div');
-                divProduto.classList.add('card-produto'); // Classe CSS para estilizar depois
-
-                // 2. Extrai os dados do objeto
-                const imagem = produto.posicao; 
-                const nomeLoja = produto.com_loja;
-                const titulo = produto.title;
-                const preco = produto.price;
-                const linkProduto = produto.link_product;
-
-                // 3. Insere a estrutura de HTML dentro da div do produto
-                divProduto.innerHTML = `
-                    <img src="${imagem}" alt="${titulo}" class="produto-img">
-                    <div class="produto-info">
-                        <span class="produto-loja">${nomeLoja}</span>
-                        <h3 class="produto-titulo">${titulo}</h3>
-                        <p class="produto-preco">R$ ${preco}</p>
-                        <a href="${linkProduto}" target="_blank" class="produto-link">Ver na Loja</a>
-                    </div>
-                `;
-
-                // 4. Adiciona esse novo produto ao container existente no seu HTML
-                document.getElementById('container-produtos').appendChild(divProduto);
->>>>>>> ec841b8f9dd2ddf3cec1b0c2406fd77e904b3b24
             });
         } // <- Fecha o if (resposta.ok)
 

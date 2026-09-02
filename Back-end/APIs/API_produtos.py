@@ -40,6 +40,7 @@ def lista_produtos():
         preco = item.get("price")
         loja = item.get("source")
         link = item.get("product_link")
+        
     # Retornando a Resposta para API protudo.js
     return jsonify({"resposta": "200",
                     "posicao": posicao,
