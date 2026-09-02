@@ -21,12 +21,28 @@ async function Produto_cliente() {
 
             dadosRetornados.forEach(produto => {
                 // Colocando nas Variaveis
+
+                 const divProduto = document.createElement('div');
+                divProduto.classList.add('card-produto'); // Classe CSS para estilizar depois
+
                 const posicao = dadosRetornados.posicao;
                 const iconLoja = dadosRetornados.Icon_loja;
                 const title = dadosRetornados.title;
                 const preco = dadosRetornados.preco;
                 const loja = dadosRetornados.loja;
                 const link = dadosRetornados.link;
+
+                 divProduto.innerHTML = `
+                    <img src="${imagem}" alt="${titulo}" class="produto-img">
+                    <div class="produto-info">
+                        <span class="produto-loja">${nomeLoja}</span>
+                        <h3 class="produto-titulo">${titulo}</h3>
+                        <p class="produto-preco">R$ ${preco}</p>
+                        <a href="${linkProduto}" target="_blank" class="produto-link">Ver na Loja</a>
+                    </div>
+                `;
+
+                 document.getElementById('container-produtos').appendChild(divProduto);
             });
         } // <- Fecha o if (resposta.ok)
 
