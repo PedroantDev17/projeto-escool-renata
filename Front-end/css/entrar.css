@@ -9,7 +9,7 @@
 
 html,body{
     width: 100%;
-    height: 0;
+   
 }
 
 body{
@@ -19,6 +19,9 @@ justify-content: center; /* Centraliza na horizontal */
 align-items: center;     /* Centraliza na vertical */
 height: 100vh;           /* Ocupa 100% da altura da tela */
 margin: 0;
+
+background-image: radial-gradient(circle, #145396 10%,var(--blue-escuro) 90%);
+
 }
 
 #container {
