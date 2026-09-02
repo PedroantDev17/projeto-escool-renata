@@ -32,23 +32,21 @@ def lista_produtos():
     # Resultado da pesquisa
     produtos_encontrados = results["shopping_results"]
 
+    lista = []
+
     # Laço for para Retirar de JSON:
     for item in produtos_encontrados:
-        posicao = item.get("position")
-        Icon_loja = item.get("source_icon")
-        title = item.get("title")
-        preco = item.get("price")
-        loja = item.get("source")
-        link = item.get("product_link")
+        produtos_list = {"posicao" : item.get("position"),
+        "Icon_loja" : item.get("source_icon"),
+        "title" : item.get("title"),
+        'preco' : item.get("price"),
+        "loja" : item.get("source"),
+        "link" : item.get("product_link")
+        }
+        lista.append(produtos_list)
         
     # Retornando a Resposta para API protudo.js
-    return jsonify({"resposta": "200",
-                    "posicao": posicao,
-                    "icon_loja": Icon_loja,
-                    "titulo": title,
-                    "preco": preco,
-                    "loja_name": loja,
-                    "link_product": link})
+    return jsonify(lista)
 
 if __name__ == '__main__':
     app.run(debug=True )
