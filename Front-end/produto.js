@@ -1,3 +1,23 @@
+// 1. Criamos a função das categorias totalmente isolada
+function criarSecaoCategorias() {
+    // Limpa o container de categorias antes de criar para não duplicar se pesquisar de novo
+    const containerCategorias = document.getElementById('icategorias');
+    containerCategorias.innerHTML = '';
+
+    const text = document.createElement('section');
+    text.classList.add('text-final');
+    
+    text.innerHTML = `
+        <h2>Melhores resultados encontrados</h2>
+        <p>Confira os modelos disponíveis nas lojas encontradas!</p>
+    `;
+    
+    containerCategorias.appendChild(text);
+}
+ 
+          
+
+
 async function Produto_cliente() {
     const produto = document.getElementById('Produtos');
     
@@ -10,7 +30,7 @@ async function Produto_cliente() {
     };
 
     try {
-        const resposta = await fetch('https://commute-doormat-operator.ngrok-free.dev/produtos', {
+        const resposta = await fetch(' https://commute-doormat-operator.ngrok-free.dev/produtos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json' // C maiúsculo corrigido
@@ -29,15 +49,19 @@ async function Produto_cliente() {
 
             const listaProdutos = typeof dadosRetornados === 'string' ? JSON.parse(dadosRetornados) : dadosRetornados;
 
+
+
             listaProdutos.forEach(lista => {
                 // Colocando nas Variaveis
 
                  const divProduto = document.createElement('div');
-                 const text = document.createElement('section');
+                 
                 // Se você tiver uma lista global acumulando os produtos, zere ela:
                 
-
-                divProduto.classList.add('card-produto'); // Classe CSS para estilizar depois
+               
+                divProduto.classList.add('card-produto');
+                
+                // Classe CSS para estilizar depois
 
                 // const posicao = dadosRetornados.posicao;
                 // const iconLoja = dadosRetornados.Icon_loja;
@@ -55,8 +79,10 @@ async function Produto_cliente() {
                 const linkProduto = lista.link;
 
 
-                
+               
+
                  divProduto.innerHTML = `
+                 
                     <img src="${imagens}" alt="${titulo}" class="produto-img">
                     <div class="produto-info">
                         <div class="marca-container">
@@ -68,9 +94,12 @@ async function Produto_cliente() {
                         <a href="${linkProduto}" target="_blank" class="produto-link">Ver na Loja</a>
                     </div>
                 `;
-
+               
                  document.getElementById('container-produtos').appendChild(divProduto);
+                
             });
+
+            criarSecaoCategorias();
         } // <- Fecha o if (resposta.ok)
 
     } catch (erro) { // <- O catch agora está conectado corretamente ao try

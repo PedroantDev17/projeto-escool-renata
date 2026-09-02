@@ -10,7 +10,7 @@ CORS(app)
 @app.route('/produtos', methods=['POST'])
 def lista_produtos():
     # Pegando informações da API Produto.js:
-    url = 'https://commute-doormat-operator.ngrok-free.dev/produtos' 
+    url = ' https://commute-doormat-operator.ngrok-free.dev/produtos' 
     # Resposta da API ( 200, 401..)
     resposta = requests.get(url)
     print(resposta.status_code)
