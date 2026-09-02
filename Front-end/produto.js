@@ -33,6 +33,7 @@ async function Produto_cliente() {
                 // Colocando nas Variaveis
 
                  const divProduto = document.createElement('div');
+                 const text = document.createElement('section');
                 // Se você tiver uma lista global acumulando os produtos, zere ela:
                 
 
