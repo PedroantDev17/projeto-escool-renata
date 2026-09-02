@@ -84,6 +84,11 @@ main{
     justify-items: center;
    
 }
+.elementos > .aviso > p {
+    color: red;
+    opacity: 0.5;
+    text-align: center;
+}
 .Text_principal,.blocos {
     margin: 3vh;
 }
@@ -120,6 +125,7 @@ input,#Principal_file{
 .text_bottom{
     font-size: small;
      opacity: 0.7;
+     text-align: center;
 
 }
 input[type="file"] {
@@ -218,6 +224,8 @@ input[type="submit"]:hover{
     
     display: flex;
     justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
 }
 
 .categorias .text-final section {
@@ -232,10 +240,12 @@ input[type="submit"]:hover{
 
 /* Organiza a lista de produtos em colunas responsivas */
 .vitrine-produtos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    display: flex;
     gap: 20px;
     padding: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* Estilo do cartão individual de cada produto */
@@ -247,6 +257,7 @@ input[type="submit"]:hover{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 14%;
 }
 
 .produto-img {
@@ -257,6 +268,29 @@ input[type="submit"]:hover{
     margin-bottom: 10px;
 }
 
+/* IMAGEM DA LOGOTIPO MARCA */
+/* Alinha a logo e o texto na mesma linha horizontal */
+.marca-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;          /* Espaçamento entre a logo e o texto */
+    margin-bottom: 8px; /* Afasta o bloco do título do produto */
+}
+
+/* Controla o tamanho e formato da mini logo */
+.loja-logo {
+    width: 20px;       /* Define a largura pequena */
+    height: 20px;      /* Define a altura pequena */
+    object-fit: contain;
+    border-radius: 4px; /* Deixa os cantos da logo levemente arredondados */
+}
+
+/* Garante que o texto da loja fique alinhado */
+.produto-loja {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+}
 
 
 

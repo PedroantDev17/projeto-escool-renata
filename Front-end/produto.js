@@ -1,6 +1,8 @@
 async function Produto_cliente() {
     const produto = document.getElementById('Produtos');
+
     const valor = produto.value;
+
 
     const dadosParaEnviar = {
         nomeProduto: valor
@@ -16,12 +18,15 @@ async function Produto_cliente() {
         });
 
         if (resposta.ok) {
+
             const dadosRetornados = await resposta.json();
             console.log('Sucesso:', dadosRetornados);
 
-            const listaDeProdutos = [dadosRetornados];
+            
 
-            listaDeProdutos.forEach(produto => {
+            const listaProdutos = typeof dadosRetornados === 'string' ? JSON.parse(dadosRetornados) : dadosRetornados;
+
+            listaProdutos.forEach(lista => {
                 // Colocando nas Variaveis
 
                  const divProduto = document.createElement('div');
@@ -34,16 +39,21 @@ async function Produto_cliente() {
                 // const loja = dadosRetornados.loja;
                 // const link = dadosRetornados.link;
 
-                const imagem = produto.icon_loja; 
-                const nomeLoja = produto.loja_name;
-                const titulo = produto.titulo;
-                const preco = produto.preco;
-                const linkProduto = produto.link;
+
+                const imagens = lista.imagem;
+                const iconImagem = lista.Icon_loja;
+                const nomeLoja = lista.loja;
+                const titulo = lista.title;
+                const preco = lista.preco;
+                const linkProduto = lista.link;
 
                  divProduto.innerHTML = `
-                    <img src="${imagem}" alt="${titulo}" class="produto-img">
+                    <img src="${imagens}" alt="${titulo}" class="produto-img">
                     <div class="produto-info">
-                        <span class="produto-loja">${nomeLoja}</span>
+                        <div class="marca-container">
+                            <img src="${iconImagem}" alt="Logo" ${nomeLoja} class="loja-logo">
+                            <span class="produto-loja">${nomeLoja}</span>
+                        </div>
                         <h3 class="produto-titulo">${titulo}</h3>
                         <p class="produto-preco">R$ ${preco}</p>
                         <a href="${linkProduto}" target="_blank" class="produto-link">Ver na Loja</a>
