@@ -36,7 +36,8 @@ def lista_produtos():
 
     # Laço for para Retirar de JSON:
     for item in produtos_encontrados:
-        produtos_list = {"posicao" : item.get("position"),
+        produtos_list = { "imagem" : item.get("thumbnail"),
+        "posicao" : item.get("position"),
         "Icon_loja" : item.get("source_icon"),
         "title" : item.get("title"),
         'preco' : item.get("price"),
@@ -44,7 +45,7 @@ def lista_produtos():
         "link" : item.get("product_link")
         }
         lista.append(produtos_list)
-        
+
     # Retornando a Resposta para API protudo.js
     return jsonify(lista)
 
