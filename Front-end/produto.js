@@ -1,5 +1,6 @@
 async function Produto_cliente() {
     const produto = document.getElementById('Produtos');
+    
 
     const valor = produto.value;
 
@@ -19,6 +20,8 @@ async function Produto_cliente() {
 
         if (resposta.ok) {
 
+            document.getElementById('container-produtos').innerHTML='';
+
             const dadosRetornados = await resposta.json();
             console.log('Sucesso:', dadosRetornados);
 
@@ -30,6 +33,10 @@ async function Produto_cliente() {
                 // Colocando nas Variaveis
 
                  const divProduto = document.createElement('div');
+                 const text = document.createElement('section');
+                // Se você tiver uma lista global acumulando os produtos, zere ela:
+                
+
                 divProduto.classList.add('card-produto'); // Classe CSS para estilizar depois
 
                 // const posicao = dadosRetornados.posicao;
@@ -47,6 +54,8 @@ async function Produto_cliente() {
                 const preco = lista.preco;
                 const linkProduto = lista.link;
 
+
+                
                  divProduto.innerHTML = `
                     <img src="${imagens}" alt="${titulo}" class="produto-img">
                     <div class="produto-info">

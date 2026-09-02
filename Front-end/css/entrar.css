@@ -31,7 +31,7 @@ background-image: radial-gradient(circle, #145396 10%,var(--blue-escuro) 90%);
     justify-items: center;
 
     background-color: var(--blue-escuro);
-    padding: 30px;
+    padding: 10vh;
     border-radius: 10px;
 }
 label{
