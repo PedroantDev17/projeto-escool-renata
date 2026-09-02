@@ -25,12 +25,18 @@ async function Produto_cliente() {
                  const divProduto = document.createElement('div');
                 divProduto.classList.add('card-produto'); // Classe CSS para estilizar depois
 
-                const posicao = dadosRetornados.posicao;
-                const iconLoja = dadosRetornados.Icon_loja;
-                const title = dadosRetornados.title;
-                const preco = dadosRetornados.preco;
-                const loja = dadosRetornados.loja;
-                const link = dadosRetornados.link;
+                // const posicao = dadosRetornados.posicao;
+                // const iconLoja = dadosRetornados.Icon_loja;
+                // const title = dadosRetornados.title;
+                // const preco = dadosRetornados.preco;
+                // const loja = dadosRetornados.loja;
+                // const link = dadosRetornados.link;
+
+                const imagem = produto.Icon_loja; 
+                const nomeLoja = produto.loja;
+                const titulo = produto.title;
+                const preco = produto.preco;
+                const linkProduto = produto.link;
 
                  divProduto.innerHTML = `
                     <img src="${imagem}" alt="${titulo}" class="produto-img">
