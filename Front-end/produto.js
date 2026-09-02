@@ -19,7 +19,9 @@ async function Produto_cliente() {
             const dadosRetornados = await resposta.json();
             console.log('Sucesso:', dadosRetornados);
 
-            dadosRetornados.forEach(produto => {
+            const listaDeProdutos = [dadosRetornados];
+
+            listaDeProdutos.forEach(produto => {
                 // Colocando nas Variaveis
 
                  const divProduto = document.createElement('div');
@@ -32,9 +34,9 @@ async function Produto_cliente() {
                 // const loja = dadosRetornados.loja;
                 // const link = dadosRetornados.link;
 
-                const imagem = produto.Icon_loja; 
-                const nomeLoja = produto.loja;
-                const titulo = produto.title;
+                const imagem = produto.icon_loja; 
+                const nomeLoja = produto.loja_name;
+                const titulo = produto.titulo;
                 const preco = produto.preco;
                 const linkProduto = produto.link;
 
