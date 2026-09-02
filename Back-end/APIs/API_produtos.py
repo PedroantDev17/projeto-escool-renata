@@ -44,6 +44,7 @@ def lista_produtos():
         "loja" : item.get("source"),
         "link" : item.get("product_link")
         }
+        # Colocando em uma lista
         lista.append(produtos_list)
 
     # Retornando a Resposta para API protudo.js
