@@ -4,24 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../favicon_io/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../css/entrar.css">
+    <link rel="stylesheet" href="../css/create_user.css">
     <title>Entrar</title>
 </head>
 <body>
     <div id="container">
-        <section class="image-logo" >
+        <section class="image-logo">
             <img src="../favicon_io/apple-touch-icon.png" alt="logotipo">
         </section>
         <section class="formulario">
             <form action="#" method="post">
-                <label for="iemail">Gmail:</label>
+                <label for="iname">Nome: <span>*</span></label>
+                <input type="text"
+                required
+                name="nome"
+                id="inome"
+                placeholder="Coloque seu nome">
+
+                <label for="iemail">Gmail: <span>*</span></label>
                 <input type="email"
                  name="email" 
                  id="iemail" 
                  placeholder="Coloque seu Gmail"
                  required
                  autocomplete="off">
-                <label for="isenha">Senha:</label>
+                 
+                <label for="isenha">Senha: <span>*</span></label>
                 <input type="password" name="senha"
                  id="isenha"
                  placeholder="Insira sua senha"

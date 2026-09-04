@@ -46,8 +46,10 @@ label{
     justify-self: center;
     justify-items: center;
 }
-
-.formulario > form #iemail, #isenha {
+span{
+    color: rgb(141, 11, 11);
+}
+.formulario > form #iemail, #isenha, #inome {
     padding: 9px;
     margin: 10px;
     background-color: transparent;
