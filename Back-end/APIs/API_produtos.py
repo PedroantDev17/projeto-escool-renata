@@ -23,12 +23,12 @@ def lista_produtos():
     # Consultando produtos
     client = serpapi.Client(api_key="a8c241eafd2cd20e0de947b1f9bdeef39585c2615f2e707a173cc7319ae2d5b2")
     results = client.search({
-        "engine": "google_shopping",
-        "q": produto,
-        "gl": "br",
-        "hl": "pt-br"
+    "engine": "google_shopping",
+    "q": produto,
+    "location": "Brazil",
+    "hl": "pt-br",
+    "gl": "br"
     })
-
     # Resultado da pesquisa
     produtos_encontrados = results["shopping_results"]
 
