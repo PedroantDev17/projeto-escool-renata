@@ -6,6 +6,15 @@
     <link rel="shortcut icon" href="../favicon_io/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../css/create_user.css">
     <title>Entrar</title>
+    <script src="">
+        function create_dados(){
+            const nome = document.getElementById('inome');
+            const email = document.getElementById('iemail');
+            const senha = document.getElementById('isenha');
+
+            
+        }
+    </script>
 </head>
 <body>
     <div id="container">
@@ -35,7 +44,7 @@
                  id="isenha"
                  placeholder="Insira sua senha"
                  required>
-                <input type="submit" value="Entrar">
+                <input type="submit" value="Entrar" onclick="create_dados()">
             </form>
         </section>
     </div>
