@@ -108,11 +108,13 @@ async function Produto_cliente() {
 } // <- Fecha a função Produto_cliente
 
 
-function create_cont(){
+function create_cont(event){
+      event.preventDefault();
         window.location.href = '../Front-end/user_login/create_user.html'
 }
 
 
-function entrar(){
+function entrar(event){
+      event.preventDefault();
     window.location.href = '../Front-end/user_login/entrar.html'
 }
