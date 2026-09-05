@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="../css/entrar.css">
     <title>Entrar</title>
     <script>
-        function create_dados() {
+        function create_dados(event) {
+             event.preventDefault();
     // Captura o texto digitado e remove espaços inúteis nas pontas com o .trim()
     let email = document.getElementById('iemail').value.trim();
     let senha = document.getElementById('isenha').value.trim();
@@ -54,7 +55,7 @@
             <img src="../favicon_io/apple-touch-icon.png" alt="logotipo">
         </section>
         <section class="formulario">
-            <form action="#" method="post"  onsubmit="return create_dados()">
+            <form action="#" method="post"  onsubmit="return create_dados(event)">
                 <label for="iemail">Gmail:</label>
                 <input type="email"
                  name="email" 

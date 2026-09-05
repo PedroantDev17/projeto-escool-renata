@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="../css/create_user.css">
     <title>Cadastro</title>
    <script>
-function create_dados() {
+function create_dados(event) {
+    event.preventDefault();
     // Captura o texto digitado e remove espaços inúteis nas pontas com o .trim()
     let nome = document.getElementById('inome').value.trim();
     let email = document.getElementById('iemail').value.trim();
@@ -53,6 +54,8 @@ function create_dados() {
     return true;
 }
 
+
+
 </script>
 
 </head>
@@ -62,7 +65,7 @@ function create_dados() {
             <img src="../favicon_io/apple-touch-icon.png" alt="logotipo">
         </section>
         <section class="formulario">
-            <form action="#" method="post" onsubmit="return create_dados()">
+            <form action="#" method="post" onsubmit="return create_dados(event)">
                 <label for="iname">Nome: <span>*</span></label>
                 <input type="text"
                 required
