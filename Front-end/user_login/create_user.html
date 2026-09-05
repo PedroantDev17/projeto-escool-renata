@@ -5,16 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../favicon_io/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../css/create_user.css">
-    <title>Entrar</title>
-    <script src="">
-        function create_dados(){
-            const nome = document.getElementById('inome');
-            const email = document.getElementById('iemail');
-            const senha = document.getElementById('isenha');
+    <title>Cadastro</title>
+   <script>
+function create_dados() {
+    // Captura o texto digitado e remove espaços inúteis nas pontas com o .trim()
+    let nome = document.getElementById('inome').value.trim();
+    let email = document.getElementById('iemail').value.trim();
+    let senha = document.getElementById('isenha').value.trim();
 
-            
-        }
-    </script>
+    // 1. ANTISCRIPT: Remove qualquer caractere < ou > para impedir códigos HTML/Script
+    const contemScript = /[<>]/;
+    if (contemScript.test(nome) || contemScript.test(email) || contemScript.test(senha)) {
+        window.alert('Cadastro incorreto! Caracteres inválidos detectados.');
+        window.location.href = '../video_presente/presente.html'
+        return false;
+    }
+
+    // 2. Validação de campos vazios
+    if (nome === "" || email === "" || senha === "") {
+        window.alert('Cadastro incorreto! Preencha todos os campos.');
+        return false;
+    }
+
+    // 3. Validação do Nome (Não pode ter números de 0 a 9)
+    const temNumeroNoNome = /\d/.test(nome);
+    if (temNumeroNoNome) {
+        window.alert('Cadastro incorreto! O nome não pode conter números.');
+        return false;
+    }
+
+    // 4. Validação do Email (Obrigatório ter o caractere @)
+    if (!email.includes('@')) {
+        window.alert('Cadastro incorreto! Digite um e-mail válido com @.');
+        return false;
+    }
+
+    // 5. Validação da Senha (Apenas símbolos e caracteres especiais - SEM letras e SEM números)
+    // A regra abaixo diz: "Se encontrar qualquer letra (a-z, A-Z) ou número (0-9)"
+    const temLetraOuNumeroNaSenha = /[a-zA-Z0-9]/.test(senha);
+    if (temLetraOuNumeroNaSenha) {
+        window.alert('Cadastro incorreto! A senha deve conter apenas caracteres especiais (ex: @#$!%*).');
+        return false;
+    }
+
+    // Se passou por todas as regras sem dar "return false"
+    window.location.href = '../../index.html'
+    return true;
+}
+
+</script>
+
 </head>
 <body>
     <div id="container">
@@ -22,7 +62,7 @@
             <img src="../favicon_io/apple-touch-icon.png" alt="logotipo">
         </section>
         <section class="formulario">
-            <form action="#" method="post">
+            <form action="#" method="post" onsubmit="return create_dados()">
                 <label for="iname">Nome: <span>*</span></label>
                 <input type="text"
                 required
@@ -44,7 +84,7 @@
                  id="isenha"
                  placeholder="Insira sua senha"
                  required>
-                <input type="submit" value="Entrar" onclick="create_dados()">
+                <input type="submit" value="Entrar">
             </form>
         </section>
     </div>

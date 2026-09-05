@@ -1,0 +1,24 @@
+#video-fundo {
+    position: fixed;    /* Fixa o vídeo na tela, ele não se move ao rolar a página */
+    top: 0;
+    left: 0;
+    width: 100vw;       /* Ocupa 100% da largura da janela */
+    height: 100vh;      /* Ocupa 100% da altura da janela */
+    object-fit: cover;  /* Corta e ajusta o vídeo para preencher a tela sem distorcer */
+    z-index: -1;        /* Joga o vídeo para trás de todos os textos e formulários */
+}
+
+/* Garante que o body não crie barras de rolagem desnecessárias */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#police_meme{
+    position: relative;
+}
