@@ -107,3 +107,12 @@ async function Produto_cliente() {
     }
 } // <- Fecha a função Produto_cliente
 
+
+function create_cont(){
+        window.location.href = '../Front-end/user_login/create_user.html'
+}
+
+
+function entrar(){
+    window.location.href = '../Front-end/user_login/entrar.html'
+}

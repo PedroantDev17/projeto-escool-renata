@@ -20,7 +20,7 @@ align-items: center;     /* Centraliza na vertical */
 height: 100vh;           /* Ocupa 100% da altura da tela */
 margin: 0;
 
-background-image: radial-gradient(circle, #145396 10%,var(--blue-escuro) 90%);
+background-color: #0f172a;
 
 }
 
@@ -30,14 +30,14 @@ background-image: radial-gradient(circle, #145396 10%,var(--blue-escuro) 90%);
     justify-content: center;
     justify-items: center;
 
-    background-color: var(--blue-escuro);
+    background-color: #fff;
     border: 1px solid #fff;
     
     padding: 10vh;
     border-radius: 10px;
 }
 label{
-    color: white;
+    color: #1e293b;
 
 }
 
@@ -46,40 +46,42 @@ label{
     justify-self: center;
     justify-items: center;
 }
-
-.formulario > form #iemail, #isenha {
-    padding: 9px;
+span{
+    color: rgb(141, 11, 11);
+}
+.formulario > form #iemail, #isenha, #inome {
+    padding: 8px;
     margin: 10px;
     background-color: transparent;
-    border: 1px solid black;
+    border: 1px solid #cbd5e1;
     border-radius: 5px;
+    color: #1e293b;
     
 }
 ::placeholder{
-    color: #fff;
+    color:  #1e293b;
     text-shadow: 1.5px 1px 3px;
 }
 
 
 input[type="submit"] {
-    background-color: rgb(14, 92, 248);
-    border: 1px solid black;
+    background-color: #0088cc;
+    color: #fff;
+    border: 1px solid transparent;
+    padding: 10px 24px;
     border-radius: 10px;
-    padding: 10px; 
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
     
 }
 input[type="submit"]:hover {
-    color: #fff;
-    background-color: rgb(0, 44, 131);
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 10px;
-    transition: 0.5s;
+    background-color: #00a8ff;
+    border-color: #0077b3;
 }
 input[type="submit"]:active{
-    font-size: 11px;
-    background-color: #fff;
-    transition: none;
+   transform: scale(0.95);
+   background-color: #0077b3;
 }
 
 
