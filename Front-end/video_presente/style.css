@@ -1,24 +1,34 @@
-#video-fundo {
-    position: fixed;    /* Fixa o vídeo na tela, ele não se move ao rolar a página */
-    top: 0;
-    left: 0;
-    width: 100vw;       /* Ocupa 100% da largura da janela */
-    height: 100vh;      /* Ocupa 100% da altura da janela */
-    object-fit: cover;  /* Corta e ajusta o vídeo para preencher a tela sem distorcer */
-    z-index: -1;        /* Joga o vídeo para trás de todos os textos e formulários */
-}
-
-/* Garante que o body não crie barras de rolagem desnecessárias */
-body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden; 
+body{
+    width: 100%;
+    height: 0;
+    margin: 0 auto;
     display: grid;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    text-align: center;
+     animation: coresAleatoriasCatarata 2s ease infinite;
 }
 
+video{
+    width: 50vh;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #fff;
+}
 #police_meme{
     position: relative;
+}
+
+@keyframes coresAleatoriasCatarata {
+    0%   { background-color: #ff0055; } /* Rosa */
+    10%  { background-color: #00ff66; } /* Verde limão */
+    20%  { background-color: #0066ff; } /* Azul */
+    30%  { background-color: #ffcc00; } /* Amarelo */
+    40%  { background-color: #9900ff; } /* Roxo */
+    50%  { background-color: #ff5500; } /* Laranja */
+    60%  { background-color: #00ffff; } /* Ciano */
+    70%  { background-color: #ff00ff; } /* Magenta */
+    80%  { background-color: #33cc33; } /* Verde escuro */
+    90%  { background-color: #6600cc; } /* Violeta */
+    100% { background-color: #ff0055; } /* Volta ao Rosa inicial sem dar tranco */
 }
