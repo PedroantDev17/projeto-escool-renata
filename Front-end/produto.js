@@ -110,11 +110,11 @@ async function Produto_cliente() {
 
 function create_cont(event){
       event.preventDefault();
-        window.location.href = '../Front-end/user_login/create_user.html'
+        window.location.href = 'Front-end/user_login/create_user.html'
 }
 
 
 function entrar(event){
       event.preventDefault();
-    window.location.href = '../Front-end/user_login/entrar.html'
+    window.location.href = 'Front-end/user_login/entrar.html'
 }
