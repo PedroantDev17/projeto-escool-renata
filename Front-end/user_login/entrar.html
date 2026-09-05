@@ -37,12 +37,11 @@
 
     // 5. Validação da Senha (Apenas símbolos e caracteres especiais - SEM letras e SEM números)
     // A regra abaixo diz: "Se encontrar qualquer letra (a-z, A-Z) ou número (0-9)"
-    const temLetraOuNumeroNaSenha = /[a-zA-Z0-9]/.test(senha);
-    if (temLetraOuNumeroNaSenha) {
-        window.alert('Cadastro incorreto! A senha deve conter apenas caracteres especiais (ex: @#$!%*).');
-        return false;
-    }
+    const senhaValida = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/.test(senha);
 
+    if (!senhaValida) { // O "!" significa: Se NÃO atender aos requisitos acima
+    window.alert('Cadastro incorreto! A senha deve ter pelo menos 6 caracteres e misturar letras, números e caracteres especiais (ex: 2026@pedro).');
+    return false;
     // Se passou por todas as regras sem dar "return false"
     window.location.href = '../../index.html'
     return true;
