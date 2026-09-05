@@ -42,10 +42,14 @@
     if (!senhaValida) { // O "!" significa: Se NÃO atender aos requisitos acima
     window.alert('Cadastro incorreto! A senha deve ter pelo menos 6 caracteres e misturar letras, números e caracteres especiais (ex: 2026@pedro).');
     return false;
-    // Se passou por todas as regras sem dar "return false"
+
+ } else{
+     // Se passou por todas as regras sem dar "return false"
     window.location.href = '../../index.html'
     return true;
-}
+ }  
+   
+
 }
     </script>
 </head>
