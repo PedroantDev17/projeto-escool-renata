@@ -40,6 +40,8 @@ def lista_produtos():
         "posicao" : item.get("position"),
         "Icon_loja" : item.get("source_icon"),
         "title" : item.get("title"),
+        "nota" : item.get("rating"),
+        "compras" : item.get("reviews"),
         'preco' : item.get("price"),
         "loja" : item.get("source"),
         "link" : item.get("product_link")
