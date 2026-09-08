@@ -92,7 +92,7 @@ async function Produto_cliente() {
                             <span class="produto-loja">${nomeLoja}</span>
                         </div>
                         <h3 class="produto-titulo">${titulo}</h3>
-                        <p class="esrelas">Avaliação: &#9733; ${nota_produto}</p>
+                        <p class="esrelas">Avaliação: ⭐ ${nota_produto}</p>
 
                         <p class="produto-preco">R$ ${preco}</p>
                         <a href="${linkProduto}" target="_blank" class="produto-link">Ver na Loja</a>
