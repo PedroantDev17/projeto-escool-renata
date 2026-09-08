@@ -77,6 +77,8 @@ async function Produto_cliente() {
                 const titulo = lista.title;
                 const preco = lista.preco;
                 const linkProduto = lista.link;
+                const nota_produto = lista.nota;
+                const compras_total = lista.compras
 
 
                
@@ -90,8 +92,11 @@ async function Produto_cliente() {
                             <span class="produto-loja">${nomeLoja}</span>
                         </div>
                         <h3 class="produto-titulo">${titulo}</h3>
+                        <p class="esrelas">Avaliação: &#9733; ${nota_produto}</p>
+
                         <p class="produto-preco">R$ ${preco}</p>
                         <a href="${linkProduto}" target="_blank" class="produto-link">Ver na Loja</a>
+                        <p class="total_de_compras">total:${compras_total}</p>
                     </div>
                 `;
                
