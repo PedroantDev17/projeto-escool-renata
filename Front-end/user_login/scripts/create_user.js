@@ -7,7 +7,8 @@ function create_dados(event) {
 
     // 1. ANTISCRIPT: Remove qualquer caractere < ou > para impedir códigos HTML/Script
     const contemScript = /[<>]/;
-    if (contemScript.test(nome) || contemScript.test(email) || contemScript.test(senha)) {
+    const python = /[=]/;
+    if (contemScript.test(nome),python.test(nome) || contemScript.test(email),python.test(email) || contemScript.test(senha),python(senha)) {
         window.alert('Cadastro incorreto! Caracteres inválidos detectados.');
         window.location.href = '../video_presente/presente.html'
         return false;
@@ -37,10 +38,13 @@ function create_dados(event) {
     const senhaValida = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/.test(senha);
 
     if (!senhaValida) { // O "!" significa: Se NÃO atender aos requisitos acima
-    window.alert('Cadastro incorreto! A senha deve ter pelo menos 6 caracteres e misturar letras, números e caracteres especiais (ex: 2026@pedro).');
+    window.alert('Cadastro incorreto! A senha deve ter pelo menos 6 caracteres e misturar letras, números e caracteres especiais (ex: 1234@teste).');
     return false;
 }else{
     window.location.href = '../../index.html'
+    
+    
+
     return true;
 }
 
