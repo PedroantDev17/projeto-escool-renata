@@ -8,7 +8,7 @@ function create_dados(event) {
     const contemScript = /[<>]/;
     const python = /[=\-()]/;
 
-    if (contemScript.test(nome) ||python.test(nome) || contemScript.test(email) || python.test(email) || contemScript.test(senha) || python.test(senha)) {
+    if (contemScript.test(email) || python.test(email) || contemScript.test(senha) || python.test(senha)) {
         window.alert('Cadastro incorreto! Caracteres inválidos detectados.');
         window.location.href = '../video_presente/presente.html'
         return false;
