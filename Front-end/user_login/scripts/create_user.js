@@ -9,7 +9,7 @@ function create_dados(event) {
     const contemScript = /[<>]/;
     const python = /[=\-()]/;
     
-    if (contemScript.test(nome) || python.test(nome) || contemScript.test(email) || python.test(email) || contemScript.test(senha) || python(senha)) {
+    if (contemScript.test(nome) || python.test(nome) || contemScript.test(email) || python.test(email) || contemScript.test(senha) || python.test(senha)) {
         window.alert('Cadastro incorreto! Caracteres inválidos detectados.');
         window.location.href = '../video_presente/presente.html'
         return false;
@@ -43,12 +43,21 @@ function create_dados(event) {
     return false;
 }else{
     window.location.href = '../../index.html'
-    
-    
-
+     fetch('https://commute-doormat-operator.ngrok-free.dev/usuarios', {
+                method:'POST',
+                headers: {
+                    'content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    'nome':nome,
+                    'email':email,
+                    'senha':senha
+                })
+            })
     return true;
 }
 
     // Se passou por todas as regras sem dar "return false"
     
 }
+
