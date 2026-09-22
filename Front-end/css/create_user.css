@@ -49,7 +49,11 @@ label{
 span{
     color: rgb(141, 11, 11);
 }
-.formulario > form #iemail, #isenha, #inome {
+.opcional{
+    color: black;
+    font-size: 10px;
+}
+.formulario > form #iemail, #isenha, #inome, #itelefone {
     padding: 8px;
     margin: 10px;
     background-color: transparent;

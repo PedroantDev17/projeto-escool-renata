@@ -1,3 +1,5 @@
+const { createElement } = require("react");
+
 function create_dados(event) {
     event.preventDefault();
     // Captura o texto digitado e remove espaços inúteis nas pontas com o .trim()
@@ -51,4 +53,10 @@ function create_dados(event) {
 
     // Se passou por todas as regras sem dar "return false"
     
+}
+
+function telefone () {
+        const input = document.createElement('input:number')
+         const containerCategorias = document.querySelector('itelefone');
+    containerCategorias.innerHTML = '';
 }
