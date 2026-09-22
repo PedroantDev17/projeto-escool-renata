@@ -45,6 +45,7 @@ function create_dados(event) {
     return false;
 }else{
     window.location.href = '../../index.html'
+     fetch()
     
     
 
@@ -55,8 +56,3 @@ function create_dados(event) {
     
 }
 
-function telefone () {
-        const input = document.createElement('input:number')
-         const containerCategorias = document.querySelector('itelefone');
-    containerCategorias.innerHTML = '';
-}
