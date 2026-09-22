@@ -66,6 +66,7 @@
 
 // Adicionamos 'async' antes da função para permitir o uso de 'await'
 async function entrar(event) {
+    console.log('teste')
     event.preventDefault();
     
     // Captura o texto digitado e remove espaços inúteis nas pontas
