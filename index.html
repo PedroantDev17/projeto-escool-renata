@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="Front-end/favicon_io/favicon.ico" type="image/x-icon">
     <title>Comparaí</title> 
     <link rel="stylesheet" href="https://googleapis.com" />
-    
+    <script src="Front-end/categorias.js" defer></script>
 </head>
 <body>
     <header>
@@ -16,7 +16,7 @@
             <ul>
                 <li><a href="#">inicio</a></li>
                 <li><a href="#tutorial">Como Funciona</a> </li>
-                <li><a href="Front-end/categorias.html">Categorias</a></li>
+                <li><a onclick="categorias('termo'); event.preventDefault()">Categorias</a></li>
                 <li><a href="#">Favoritos</a></li>
                 <li><a href="#">Blog</a></li>
             </ul>
@@ -161,6 +161,6 @@
     </footer>
 
     
-    <script src="Front-end/produto.js"></script>
+    <script src="Front-end/produto.js" ></script>
 </body>
 </html>
