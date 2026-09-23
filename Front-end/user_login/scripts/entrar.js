@@ -127,7 +127,8 @@ async function entrar(event) {
             console.log("Resposta da API:",dados_DaResposta);
             window.alert(`Bem-vindo, ${dados_DaResposta.usuario || 'Login realizado com sucesso!'}`);
 
-            window.location.href = '../../../index.html';
+            window.location.href = '/projeto-escool-renata/index.html';
+            // window.location.href = '../../../index.html';
             return true;
         } else {
             window.alert('Erro de login, tente novamente');
