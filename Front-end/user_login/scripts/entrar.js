@@ -64,7 +64,7 @@ async function entrar(event) {
             window.alert(`Bem-vindo, ${dados_DaResposta.usuario || 'Login realizado com sucesso!'}`);
 
             
-             window.location.href = '../../../index.html';
+            window.location.href = '../../projeto-escool-renata/index.html';
             return true;
         } else {
             window.alert('Erro de login, tente novamente');
