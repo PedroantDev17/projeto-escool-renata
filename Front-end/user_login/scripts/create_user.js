@@ -43,7 +43,7 @@ function create_dados(event) {
     return false;
 }else{
     window.location.href = '../../../index.html';
-     fetch('https://commute-doormat-operator.ngrok-free.dev/usuarios', {
+     fetch('/api/usuarios', {
                 method:'POST',
                 headers: {
                     'content-Type':'application/json',

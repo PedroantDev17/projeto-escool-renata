@@ -30,7 +30,7 @@ async function Produto_cliente() {
     };
 
     try {
-        const resposta = await fetch(' https://commute-doormat-operator.ngrok-free.dev/produtos', {
+        const resposta = await fetch('/api/produtos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // C maiúsculo corrigido

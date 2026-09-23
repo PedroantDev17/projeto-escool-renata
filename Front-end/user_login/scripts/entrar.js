@@ -43,7 +43,7 @@ async function entrar(event) {
     // Se o código chegou até aqui, os dados são válidos. Iniciamos o envio:
     try {
         // CORREÇÃO: Aguarda o envio do fetch terminar para não cancelar a requisição
-        const resposta = await fetch('https://commute-doormat-operator.ngrok-free.dev/login', {
+        const resposta = await fetch('/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Corrigido o 'C' maiúsculo de Content-Type

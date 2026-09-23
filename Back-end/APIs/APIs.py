@@ -150,15 +150,11 @@
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import requests
 import serpapi
 import sqlite3
-import os
 
-# Configuração do Banco de Dados para Serverless
-# Se estiver na nuvem, ele usa uma pasta temporária para evitar erros de escrita
-db_path = '/tmp/banco.db' if os.environ.get('VERCEL') else 'Back-end/banco.db'
-banco = sqlite3.connect(db_path, check_same_thread=False)
+# Configuração do Banco de Dados local (temporário para a nuvem)
+banco = sqlite3.connect('Back-end/banco.db', check_same_thread=False)
 cursor = banco.cursor()
 
 app = Flask(__name__)
@@ -166,13 +162,11 @@ CORS(app)
 
 @app.route('/api/produtos', methods=['POST'])
 def lista_produtos():
+    # Retirando Informações dentro da requisição do frontend:
     info = request.get_json()
     produto = info.get('nomeProduto', '')
 
-    if not produto:
-        return jsonify({"error": "Nome do produto nao enviado"}), 400
-
-    # Consultando produtos na SerpApi
+    # Consultando produtos no SerpAPI
     client = serpapi.Client(api_key="a8c241eafd2cd20e0de947b1f9bdeef39585c2615f2e707a173cc7319ae2d5b2")
     results = client.search({
         "engine": "google_shopping",
@@ -203,6 +197,7 @@ def lista_produtos():
 
 @app.route('/api/categoria', methods=['POST'])
 def categoria():
+    # Consultando categorias padrão no SerpAPI
     client = serpapi.Client(api_key="a8c241eafd2cd20e0de947b1f9bdeef39585c2615f2e707a173cc7319ae2d5b2")
     results = client.search({
         "engine": "google_shopping",
@@ -233,14 +228,14 @@ def categoria():
 
 @app.route('/api/usuarios', methods=['POST'])
 def users():
-    cursor.execute("""CREATE TABLE IF NOT EXISTS usuario (
+    banco.execute("""CREATE TABLE IF NOT EXISTS usuario (
         id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
         nome varchar(50),
         gmail varchar(250),
         senha varchar(50)
     );""")
-    banco.commit()
 
+    # Retirando informações diretas vindas do Frontend:
     info_users = request.get_json()
     nome = info_users.get("nome")
     gmail = info_users.get("email")
@@ -249,23 +244,25 @@ def users():
     cursor.execute("INSERT INTO usuario (nome, gmail, senha) VALUES (?, ?, ?)", (nome, gmail, senha))
     banco.commit()    
 
-    return jsonify({"mensagem":"200", "success": True})
+    return jsonify({"mensagem":"200"})
 
 @app.route('/api/login', methods=['POST'])
 def login():
+    # Retirando dados diretos enviados pelo formulário do Frontend:
     login_json = request.get_json()
     senha_user = login_json.get("senha")
     email_user = login_json.get("email")
 
+    # Selecionando no Banco de Dados
     cursor.execute("SELECT nome, gmail, senha FROM usuario WHERE gmail = ? AND senha = ? LIMIT 1", (email_user, senha_user))
     resultado = cursor.fetchone()
     
     if resultado:
         nome_login = resultado[0]
-        return jsonify({"autenticado": True, "usuario": nome_login })
+        return jsonify({"autenticado": True, "usuario": nome_login})
     else:
         return jsonify({"autenticado": False})
 
-# Na Vercel, o app nao usa o app.run(), ele e chamado pelo serverless handler externo
+# Importante para a Vercel reconhecer a inicialização da Serverless Function
 if __name__ == '__main__':
     app.run(debug=True)

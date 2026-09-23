@@ -151,7 +151,7 @@ async function categorias(termo) {
 
     try {
         // 3. Faz a requisição para a API do ngrok
-        const resposta = await fetch('https://commute-doormat-operator.ngrok-free.dev/categoria', {
+        const resposta = await fetch('/api/categoria', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
