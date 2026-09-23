@@ -110,7 +110,8 @@ async function entrar(event) {
         const resposta = await fetch('https://commute-doormat-operator.ngrok-free.dev/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json' // Corrigido o 'C' maiúsculo de Content-Type
+                'Content-Type': 'application/json', // Corrigido o 'C' maiúsculo de Content-Type
+                'ngrok-skip-browser-warning': 'true'
             },
             body: JSON.stringify({
                 'email': email,

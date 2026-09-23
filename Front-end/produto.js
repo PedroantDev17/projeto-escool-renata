@@ -33,7 +33,8 @@ async function Produto_cliente() {
         const resposta = await fetch(' https://commute-doormat-operator.ngrok-free.dev/produtos', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json' // C maiúsculo corrigido
+                'Content-Type': 'application/json', // C maiúsculo corrigido
+                'ngrok-skip-browser-warning': 'true'
             },
             body: JSON.stringify(dadosParaEnviar)
         });

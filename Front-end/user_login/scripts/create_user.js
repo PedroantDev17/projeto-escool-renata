@@ -46,7 +46,8 @@ function create_dados(event) {
      fetch('https://commute-doormat-operator.ngrok-free.dev/usuarios', {
                 method:'POST',
                 headers: {
-                    'content-Type':'application/json'
+                    'content-Type':'application/json',
+                    'ngrok-skip-browser-warning': 'true'
                 },
                 body:JSON.stringify({
                     'nome':nome,

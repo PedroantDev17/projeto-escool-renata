@@ -154,7 +154,8 @@ async function categorias(termo) {
         const resposta = await fetch('https://commute-doormat-operator.ngrok-free.dev/categoria', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             body: JSON.stringify(dadosParaEnviar)
         });
