@@ -1,0 +1,15 @@
+{
+  "builds": [
+    {
+      "src": "api/ngrok.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/ngrok",
+      "dest": "api/ngrok.ts"
+    }
+  ]
+}
+
