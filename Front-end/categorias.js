@@ -235,7 +235,7 @@ async function categorias(termo) {
         console.error('Erro na conexão ao buscar API:', erro);
         const container = document.getElementById('container-produtos');
         if (container) {
-            container.innerHTML = '<p style="text-align: center; opacity: 0.7;">Não foi possível conectar ao servidor da API.</p>';
+            container.innerHTML = '<p style="text-align: center; opacity: 0.7;">Servidor com problemas, tente novamente mais tarde...</p>';
         }
     }
 }
