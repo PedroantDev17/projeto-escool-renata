@@ -55,7 +55,40 @@ def lista_produtos():
 
     # Retornando a Resposta para API protudo.js
     return jsonify(lista)
-
+# API - Categorias
+@app.route('/categoria', methods=['POST'])
+def categoria():
+     # Consultando produtos
+        client = serpapi.Client(api_key="a8c241eafd2cd20e0de947b1f9bdeef39585c2615f2e707a173cc7319ae2d5b2")
+        results = client.search({
+        "engine": "google_shopping",
+        "q": "eletronicos",
+        "location": "Brazil",
+        "hl": "pt-br",
+        "gl": "br"
+        })
+        # Resultado da pesquisa
+        produtos_encontrados = results["shopping_results"]
+    
+        lista = []
+    
+        # Laço for para Retirar de JSON:
+        for item in produtos_encontrados:
+            produtos_list = { "imagem" : item.get("thumbnail"),
+            "posicao" : item.get("position"),
+            "Icon_loja" : item.get("source_icon"),
+            "title" : item.get("title"),
+            "nota" : item.get("rating"),
+            "compras" : item.get("reviews"),
+            'preco' : item.get("price"),
+            "loja" : item.get("source"),
+            "link" : item.get("product_link")
+            }
+            # Colocando em uma lista
+            lista.append(produtos_list)
+    
+        # Retornando a Resposta para API protudo.js
+        return jsonify(lista)
 # API - Usuarios
 @app.route('/usuarios', methods=['POST'])
 def users():
