@@ -66,6 +66,7 @@
 
 // Adicionamos 'async' antes da função para permitir o uso de 'await'
 async function entrar(event) {
+  
     event.preventDefault();
     
     // Captura o texto digitado e remove espaços inúteis nas pontas
@@ -117,12 +118,18 @@ async function entrar(event) {
             })
         });
 
-        if (resposta.ok) {
+        const dados_DaResposta = await resposta.json();
+
+        if (dados_DaResposta.autenticado === true) {
             // Só redireciona se o servidor aceitou os dados (Status 200-299)
+          
+            console.log("Resposta da API:",dados_DaResposta);
+            window.alert(`Bem-vindo, ${dados_DaResposta.usuario || 'Login realizado com sucesso!'}`);
+
             window.location.href = '../../../index.html';
             return true;
         } else {
-            window.alert('Erro no servidor ao tentar fazer login. Tente novamente mais tarde.');
+            window.alert('Erro de login, tente novamente');
             return false;
         }
 
@@ -133,3 +140,4 @@ async function entrar(event) {
         return false;
     }
 }
+

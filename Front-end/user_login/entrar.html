@@ -6,6 +6,7 @@
     <link rel="shortcut icon" href="../favicon_io/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../css/entrar.css">
     <title>Entrar</title>
+    <script src="scripts/entrar.js"></script>
     
 </head>
 <body>
@@ -14,7 +15,7 @@
             <img src="../favicon_io/apple-touch-icon.png" alt="logotipo">
         </section>
         <section class="formulario">
-            <form action="#" method="post"  onsubmit="return entrar(event)">
+            <form>
                 <label for="iemail">Gmail:</label>
                 <input type="email"
                  name="email" 
@@ -27,7 +28,7 @@
                  id="isenha"
                  placeholder="Insira sua senha"
                  required>
-                <input type="submit" value="Entrar">
+                <input type="submit" value="Entrar" onclick="entrar(event)">
             </form>
         </section>
     </div>
