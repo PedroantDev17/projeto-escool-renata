@@ -87,6 +87,29 @@
 // } // <- Fecha a função Produto_cliente
 
 // Adicionamos 'termo' como argumento para a função saber o que buscar
+
+let htmlOriginalDaPagina = '';
+
+document.addEventListener("DOMContentLoaded", () => {
+    const telaPrincipal = document.querySelector('main') || document.getElementById('conteudo-principal');
+    if (telaPrincipal) {
+        htmlOriginalDaPagina = telaPrincipal.innerHTML;
+    }
+});
+
+// 🟢 ADICIONE ESTA NOVA FUNÇÃO: Restaura a tela inicial quando chamada
+function voltarParaInicio(event) {
+    if (event) event.preventDefault();
+    
+    const telaPrincipal = document.querySelector('main') || document.getElementById('conteudo-principal');
+    if (telaPrincipal && htmlOriginalDaPagina) {
+        telaPrincipal.innerHTML = htmlOriginalDaPagina;
+        
+        // Rola a tela de volta para o topo suavemente
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
 async function categorias(termo) {
     if (!termo) {
         console.error("Nenhum termo de busca foi fornecido.");
