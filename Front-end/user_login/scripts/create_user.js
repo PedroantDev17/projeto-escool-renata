@@ -42,7 +42,7 @@ function create_dados(event) {
     window.alert('Cadastro incorreto! A senha deve ter pelo menos 6 caracteres e misturar letras, números e caracteres especiais (ex: 1234@teste).');
     return false;
 }else{
-    window.location.href = '../../../index.html';
+    window.location.href = '../../projeto-escool-renata/index.html';
      fetch('https://commute-doormat-operator.ngrok-free.dev/usuarios', {
                 method:'POST',
                 headers: {
