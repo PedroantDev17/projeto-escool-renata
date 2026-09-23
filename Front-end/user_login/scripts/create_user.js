@@ -11,7 +11,7 @@ function create_dados(event) {
     
     if (contemScript.test(nome) || python.test(nome) || contemScript.test(email) || python.test(email) || contemScript.test(senha) || python.test(senha)) {
         window.alert('Cadastro incorreto! Caracteres inválidos detectados.');
-        window.location.href = '../video_presente/presente.html'
+        window.location.href = '../../video_presente/presente.html'
         return false;
     }
 

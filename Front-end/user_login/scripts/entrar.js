@@ -80,7 +80,7 @@ async function entrar(event) {
 
     if (contemScript.test(email) || injeçãoCaracteres.test(email) || contemScript.test(senha) || injeçãoCaracteres.test(senha)) {
         window.alert('Cadastro incorreto! Caracteres inválidos detectados.');
-        window.location.href = '../video_presente/presente.html';
+        window.location.href = '../../video_presente/presente.html';
         return false;
     }
 
