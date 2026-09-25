@@ -154,13 +154,14 @@ import serpapi
 import sqlite3
 
 # Configuração do Banco de Dados local (temporário para a nuvem)
+banco_path = '/tmp/banco.db'
 banco = sqlite3.connect('Back-end/banco.db', check_same_thread=False)
 cursor = banco.cursor()
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/api/produtos', methods=['POST'])
+@app.route('/produtos', methods=['POST'])
 def lista_produtos():
     # Retirando Informações dentro da requisição do frontend:
     info = request.get_json()
@@ -195,7 +196,7 @@ def lista_produtos():
 
     return jsonify(lista)
 
-@app.route('/api/categoria', methods=['POST'])
+@app.route('/categoria', methods=['POST'])
 def categoria():
     # Consultando categorias padrão no SerpAPI
     client = serpapi.Client(api_key="a8c241eafd2cd20e0de947b1f9bdeef39585c2615f2e707a173cc7319ae2d5b2")
@@ -226,7 +227,7 @@ def categoria():
 
     return jsonify(lista)
 
-@app.route('/api/usuarios', methods=['POST'])
+@app.route('/usuarios', methods=['POST'])
 def users():
     banco.execute("""CREATE TABLE IF NOT EXISTS usuario (
         id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -246,7 +247,7 @@ def users():
 
     return jsonify({"mensagem":"200"})
 
-@app.route('/api/login', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def login():
     # Retirando dados diretos enviados pelo formulário do Frontend:
     login_json = request.get_json()
