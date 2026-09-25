@@ -1,14 +1,14 @@
 {
   "builds": [
-    {
-      "src": "Back-end/APIs/APIs.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "**/*",
-      "use": "@vercel/static"
-    }
-  ],
+  {
+    "src": "Back-end/APIs/APIs.py",
+    "use": "@vercel/python"
+  },
+  {
+    "src": "**/*.{html,css,js,ico,png,jpg,svg}",
+    "use": "@vercel/static"
+  }
+],
   "routes": [
     {
       "src": "/api/(.*)",
