@@ -1,19 +1,11 @@
 {
   "builds": [
     {
-      "src": "api/ngrok.ts",
-      "use": "@vercel/node"
-    },
-    {
       "src": "Back-end/APIs/APIs.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
-    {
-      "src": "/api/ngrok",
-      "dest": "api/ngrok.ts"
-    },
     {
       "src": "/api/(.*)",
       "dest": "Back-end/APIs/APIs.py"
