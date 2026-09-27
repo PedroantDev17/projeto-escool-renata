@@ -199,12 +199,13 @@
 
 # if __name__ == '__main__':
 #     app.run()
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import serpapi
 import psycopg2
 import os
+from google.oauth2 import id_token
+from google.auth.transport import requests as grequests
 
 app = Flask(__name__)
 CORS(app)
@@ -268,8 +269,6 @@ def get_conn():
         "DATABASE_POSTGRES_HOST/USER/PASSWORD/DATABASE)"
     )
 
-    return psycopg2.connect(database_url, sslmode="require")
-
 
 def criar_tabela_se_nao_existir():
     conn = get_conn()
@@ -284,9 +283,63 @@ def criar_tabela_se_nao_existir():
     )
     """)
 
+    # garante a coluna 'foto' mesmo se a tabela já existir de antes
+    cursor.execute("""
+    ALTER TABLE usuario ADD COLUMN IF NOT EXISTS foto VARCHAR(500)
+    """)
+
+    # impede duas contas com o mesmo e-mail, seja criada por senha ou por Google
+    cursor.execute("""
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_usuario_gmail_unico ON usuario (gmail)
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS favorito (
+        id_favorito SERIAL PRIMARY KEY,
+        gmail_usuario VARCHAR(250),
+        titulo VARCHAR(300),
+        imagem VARCHAR(500),
+        preco VARCHAR(50),
+        loja VARCHAR(100),
+        link VARCHAR(500)
+    )
+    """)
+
     conn.commit()
     cursor.close()
     conn.close()
+
+
+def buscar_ou_criar_usuario(email, nome, foto):
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT nome, gmail FROM usuario WHERE gmail = %s LIMIT 1",
+            (email,)
+        )
+        resultado = cursor.fetchone()
+
+        if resultado:
+            # já existe: atualiza a foto (pode ter mudado no Google) e retorna
+            cursor.execute(
+                "UPDATE usuario SET foto = %s WHERE gmail = %s",
+                (foto, email)
+            )
+            conn.commit()
+            return {"nome": resultado[0], "email": resultado[1], "foto": foto}
+
+        # não existe: cria um novo usuário (sem senha, já que é login via Google)
+        cursor.execute(
+            "INSERT INTO usuario (nome, gmail, foto) VALUES (%s, %s, %s)",
+            (nome, email, foto)
+        )
+        conn.commit()
+        return {"nome": nome, "email": email, "foto": foto}
+    finally:
+        cursor.close()
+        conn.close()
 
 
 # Garante que a tabela existe quando a API sobe
@@ -407,6 +460,17 @@ def users():
 
     try:
         cursor.execute(
+            "SELECT id_usuario FROM usuario WHERE gmail = %s LIMIT 1",
+            (gmail,)
+        )
+        ja_existe = cursor.fetchone()
+
+        if ja_existe:
+            return jsonify({
+                "erro": "Já existe uma conta com esse e-mail. Tente fazer login."
+            }), 409
+
+        cursor.execute(
             """
             INSERT INTO usuario (nome, gmail, senha)
             VALUES (%s, %s, %s)
@@ -421,6 +485,24 @@ def users():
     return jsonify({
         "mensagem": "Usuário cadastrado com sucesso"
     }), 201
+
+
+@app.route('/api/login-google', methods=['POST'])
+def login_google():
+    token = request.json.get('token')
+    try:
+        info = id_token.verify_oauth2_token(
+            token, grequests.Request(), os.environ.get('GOOGLE_CLIENT_ID')
+        )
+    except ValueError:
+        return jsonify({"erro": "token inválido"}), 401
+
+    email = info['email']
+    nome = info['name']
+    foto = info['picture']
+
+    usuario = buscar_ou_criar_usuario(email, nome, foto)
+    return jsonify(usuario)
 
 
 @app.route('/api/login', methods=['POST'])
@@ -469,6 +551,177 @@ def login():
     return jsonify({
         "autenticado": False
     })
+
+
+@app.route('/api/favoritos/adicionar', methods=['POST'])
+def adicionar_favorito():
+
+    info = request.get_json()
+
+    if not info:
+        return jsonify({"erro": "Nenhum JSON recebido"}), 400
+
+    gmail = info.get('gmail')
+    titulo = info.get('titulo')
+    imagem = info.get('imagem')
+    preco = info.get('preco')
+    loja = info.get('loja')
+    link = info.get('link')
+
+    if not gmail or not titulo:
+        return jsonify({"erro": "gmail e titulo são obrigatórios"}), 400
+
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            """
+            INSERT INTO favorito (gmail_usuario, titulo, imagem, preco, loja, link)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """,
+            (gmail, titulo, imagem, preco, loja, link)
+        )
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify({"mensagem": "Favorito adicionado com sucesso"}), 201
+
+
+@app.route('/api/favoritos/listar', methods=['POST'])
+def listar_favoritos():
+
+    info = request.get_json()
+
+    if not info:
+        return jsonify({"erro": "Nenhum JSON recebido"}), 400
+
+    gmail = info.get('gmail')
+
+    if not gmail:
+        return jsonify({"erro": "gmail é obrigatório"}), 400
+
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            """
+            SELECT id_favorito, titulo, imagem, preco, loja, link
+            FROM favorito
+            WHERE gmail_usuario = %s
+            ORDER BY id_favorito DESC
+            """,
+            (gmail,)
+        )
+        resultados = cursor.fetchall()
+    finally:
+        cursor.close()
+        conn.close()
+
+    lista = []
+    for linha in resultados:
+        lista.append({
+            "id_favorito": linha[0],
+            "titulo": linha[1],
+            "imagem": linha[2],
+            "preco": linha[3],
+            "loja": linha[4],
+            "link": linha[5]
+        })
+
+    return jsonify(lista)
+
+
+@app.route('/api/favoritos/remover', methods=['POST'])
+def remover_favorito():
+
+    info = request.get_json()
+
+    if not info:
+        return jsonify({"erro": "Nenhum JSON recebido"}), 400
+
+    id_favorito = info.get('id_favorito')
+    gmail = info.get('gmail')
+
+    if not id_favorito or not gmail:
+        return jsonify({"erro": "id_favorito e gmail são obrigatórios"}), 400
+
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "DELETE FROM favorito WHERE id_favorito = %s AND gmail_usuario = %s",
+            (id_favorito, gmail)
+        )
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify({"mensagem": "Favorito removido com sucesso"})
+
+
+@app.route('/api/usuarios/atualizar-nome', methods=['POST'])
+def atualizar_nome():
+
+    info = request.get_json()
+
+    if not info:
+        return jsonify({"erro": "Nenhum JSON recebido"}), 400
+
+    gmail = info.get('gmail')
+    novo_nome = info.get('nome')
+
+    if not gmail or not novo_nome:
+        return jsonify({"erro": "gmail e nome são obrigatórios"}), 400
+
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "UPDATE usuario SET nome = %s WHERE gmail = %s",
+            (novo_nome, gmail)
+        )
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify({"mensagem": "Nome atualizado com sucesso", "nome": novo_nome})
+
+
+@app.route('/api/usuarios/excluir', methods=['POST'])
+def excluir_conta():
+
+    info = request.get_json()
+
+    if not info:
+        return jsonify({"erro": "Nenhum JSON recebido"}), 400
+
+    gmail = info.get('gmail')
+
+    if not gmail:
+        return jsonify({"erro": "gmail é obrigatório"}), 400
+
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    try:
+        # remove os favoritos primeiro (não há chave estrangeira ligando as tabelas,
+        # então isso precisa ser feito manualmente antes de apagar o usuário)
+        cursor.execute("DELETE FROM favorito WHERE gmail_usuario = %s", (gmail,))
+        cursor.execute("DELETE FROM usuario WHERE gmail = %s", (gmail,))
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify({"mensagem": "Conta excluída com sucesso"})
 
 
 if __name__ == '__main__':

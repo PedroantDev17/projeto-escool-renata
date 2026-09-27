@@ -61,6 +61,7 @@ async function Produto_cliente() {
                 
                
                 divProduto.classList.add('card-produto');
+                divProduto.style.position = 'relative'; // necessário pro coração ficar no canto
                 
                 // Classe CSS para estilizar depois
 
@@ -85,7 +86,14 @@ async function Produto_cliente() {
                
 
                  divProduto.innerHTML = `
-                 
+                    <button type="button" class="btn-favoritar"
+                        data-titulo="${(titulo || '').replace(/"/g, '&quot;')}"
+                        data-imagem="${imagens || ''}"
+                        data-preco="${preco || ''}"
+                        data-loja="${(nomeLoja || '').replace(/"/g, '&quot;')}"
+                        data-link="${linkProduto || ''}"
+                        style="position:absolute; top:8px; right:8px; border:none; background:rgba(255,255,255,0.85); border-radius:50%; width:32px; height:32px; font-size:16px; cursor:pointer;">🤍</button>
+
                     <img src="${imagens}" alt="${titulo}" class="produto-img">
                     <div class="produto-info">
                         <div class="marca-container">
@@ -117,6 +125,12 @@ async function Produto_cliente() {
 function create_cont(event){
       event.preventDefault();
         window.location.href = 'Front-end/create_user.html'
+}
+
+
+function entrar(event){
+      event.preventDefault();
+    window.location.href = 'Front-end/entrar.html'
 }
 
 

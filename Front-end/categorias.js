@@ -181,6 +181,7 @@ async function categorias(termo) {
             listaProdutos.forEach(lista => {
                 const divProduto = document.createElement('div');
                 divProduto.classList.add('card-produto'); // Sua classe CSS da linha 212
+                divProduto.style.position = 'relative'; // necessário pro coração ficar no canto
 
                 const imagens = lista.imagem;
                 const iconImagem = lista.Icon_loja;
@@ -193,6 +194,14 @@ async function categorias(termo) {
 
                 // Montagem da estrutura de tags idêntica à esperada pelo seu CSS
                 divProduto.innerHTML = `
+                    <button type="button" class="btn-favoritar"
+                        data-titulo="${(titulo || '').replace(/"/g, '&quot;')}"
+                        data-imagem="${imagens || ''}"
+                        data-preco="${preco || ''}"
+                        data-loja="${(nomeLoja || '').replace(/"/g, '&quot;')}"
+                        data-link="${linkProduto || ''}"
+                        style="position:absolute; top:8px; right:8px; border:none; background:rgba(255,255,255,0.85); border-radius:50%; width:32px; height:32px; font-size:16px; cursor:pointer;">🤍</button>
+
                     <img src="${imagens}" alt="${titulo}" class="produto-img">
                     
                     <div class="marca-container">

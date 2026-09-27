@@ -1,3 +1,27 @@
+async function handleGoogleLogin(response) {
+    try {
+        const resposta = await fetch('/api/login-google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: response.credential })
+        });
+
+        if (!resposta.ok) {
+            window.alert('Não foi possível fazer login com o Google. Tente novamente.');
+            return;
+        }
+
+        const usuario = await resposta.json();
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+
+        window.location.href = '../../../index.html';
+    } catch (erro) {
+        console.error('Erro no login com Google:', erro);
+        window.alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
+    }
+}
+
+
 function create_dados(event) {
     event.preventDefault();
     // Captura o texto digitado e remove espaços inúteis nas pontas com o .trim()

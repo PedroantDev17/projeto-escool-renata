@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/create_user.css">
     <title>Cadastro</title>
    <script src="user_login/scripts/create_user.js"></script>
+   <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="Front-end/user_login/scripts/auth.js"></script>
 
 </head>
 <body>
@@ -40,6 +42,12 @@
                 <input type="submit" value="Entrar">
             </form>
         </section>
+        <h2>ou</h2>
+        <div id="g_id_onload"
+                    data-client_id="548186241483-5krrrq1vucj71a00a6pp9tqoo1gkpt07.apps.googleusercontent.com"
+                    data-callback="handleGoogleLogin">
+                </div>
+                <div class="g_id_signin" data-type="standard"></div>
     </div>
 </body>
 </html>

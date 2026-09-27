@@ -1,3 +1,25 @@
+async function handleGoogleLogin(response) {
+    try {
+        const resposta = await fetch('/api/login-google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: response.credential })
+        });
+
+        if (!resposta.ok) {
+            window.alert('Não foi possível fazer login com o Google. Tente novamente.');
+            return;
+        }
+
+        const usuario = await resposta.json();
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+
+        window.location.href = '../../../index.html';
+    } catch (erro) {
+        console.error('Erro no login com Google:', erro);
+        window.alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
+    }
+}
 
 
 // Adicionamos 'async' antes da função para permitir o uso de 'await'
@@ -67,7 +89,8 @@ async function entrar(event) {
             window.location.href = '../../../index.html';
             return true;
         } else {
-            window.alert('Erro de login, tente novamente');
+            // Se o back-end avisou que a conta é do Google (sem senha), mostra essa mensagem específica
+            window.alert(dados_DaResposta.erro || 'Erro de login, tente novamente');
             return false;
         }
 
@@ -78,4 +101,3 @@ async function entrar(event) {
         return false;
     }
 }
-
