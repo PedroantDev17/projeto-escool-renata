@@ -110,6 +110,11 @@ async function Produto_cliente() {
                 `;
                
                  document.getElementById('container-produtos').appendChild(divProduto);
+                 
+                 document.getElementById('icategorias').scrollIntoView({
+                    behavior: 'smooth', // rolagem suave (em vez de instantânea)
+                    block: 'start'      // alinha o topo do elemento com o topo da viewport
+                    });
                 
             });
 
