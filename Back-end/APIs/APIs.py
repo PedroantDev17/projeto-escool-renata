@@ -527,25 +527,36 @@ def login():
     try:
         cursor.execute(
             """
-            SELECT nome, gmail, senha
+            SELECT nome, gmail, senha, foto
             FROM usuario
-            WHERE gmail = %s AND senha = %s
+            WHERE gmail = %s
             LIMIT 1
             """,
-            (email_user, senha_user)
+            (email_user,)
         )
         resultado = cursor.fetchone()
     finally:
         cursor.close()
         conn.close()
 
-    if resultado:
+    if resultado and resultado[2] is None:
+        # conta existe, mas foi criada via Google — nunca teve senha
+        return jsonify({
+            "autenticado": False,
+            "erro": "Essa conta usa login com Google. Use o botão 'Fazer Login com o Google'."
+        }), 400
+
+    if resultado and resultado[2] == senha_user:
 
         nome_login = resultado[0]
+        foto_login = resultado[3]
 
         return jsonify({
             "autenticado": True,
-            "usuario": nome_login
+            "usuario": nome_login,
+            "nome": nome_login,
+            "email": resultado[1],
+            "foto": foto_login
         })
 
     return jsonify({

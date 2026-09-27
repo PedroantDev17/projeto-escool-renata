@@ -85,7 +85,16 @@ async function entrar(event) {
             console.log("Resposta da API:",dados_DaResposta);
             window.alert(`Bem-vindo, ${dados_DaResposta.usuario || 'Login realizado com sucesso!'}`);
 
-            
+            // Salva o usuário logado, igual o login do Google já faz —
+            // sem isso, o menu do header não sabe que alguém está logado
+            localStorage.setItem('usuario', JSON.stringify({
+                nome: dados_DaResposta.nome,
+                email: dados_DaResposta.email,
+                // conta criada por senha pode não ter foto do Google —
+                // usa um avatar genérico nesse caso
+                foto: dados_DaResposta.foto || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(dados_DaResposta.nome || 'U')
+            }));
+
             window.location.href = '../../../index.html';
             return true;
         } else {
