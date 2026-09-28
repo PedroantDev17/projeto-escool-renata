@@ -1,2 +1,16 @@
-.vercel
-.env*
+# segredos
+.env
+.env.*
+*.pem
+ngrok.txt
+
+# dependências e ambientes
+venv/
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+
+# banco local e configuração da Vercel
+*.db
+.vercel/

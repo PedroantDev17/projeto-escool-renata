@@ -3,7 +3,7 @@ async function handleGoogleLogin(response) {
         const resposta = await fetch('/api/login-google', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: response.credential })
+            body: JSON.stringify({ token: response.credential, criar: true })
         });
 
         if (!resposta.ok) {

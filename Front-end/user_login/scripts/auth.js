@@ -1,19 +1,12 @@
-function handleGoogleLogin(response) {
-  fetch('/api/login-google', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token: response.credential })
-  })
-  .then(r => r.json())
-  .then(usuario => {
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-    montarMenuPerfil(usuario);
-  });
-}
+// O login com Google (handleGoogleLogin) fica no JS da página de login,
+// que salva o usuário e redireciona. Ele não deve ser duplicado aqui.
 
 function montarMenuPerfil(usuario) {
   const areaLogin = document.querySelector('.butons'); // onde ficam os botões "entrar"/"criar conta"
-  
+
+  // Páginas sem esse elemento (como a de login) não têm menu para montar
+  if (!areaLogin) return;
+
   areaLogin.innerHTML = `
   <div class="perfil-dropdown" onclick="toggleMenu()">
     <img src="${usuario.foto}" class="avatar" alt="Foto de perfil" />
@@ -29,7 +22,8 @@ function montarMenuPerfil(usuario) {
 }
 
 function toggleMenu() {
-  document.getElementById('menuPerfil').classList.toggle('ativo');
+  const menu = document.getElementById('menuPerfil');
+  if (menu) menu.classList.toggle('ativo');
 }
 
 

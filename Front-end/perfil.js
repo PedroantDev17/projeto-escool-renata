@@ -62,10 +62,20 @@ async function salvarNomePerfil() {
 
     try {
         const resposta = await fetch('/api/usuarios/atualizar-nome', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ gmail: usuario.email, nome: novoNome })
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + usuario.token
+    },
+    body: JSON.stringify({ nome: novoNome })
         });
+
+        if (resposta.status === 401) {
+            localStorage.removeItem('usuario');
+            alert('Sua sessão expirou. Faça login novamente.');
+            location.reload();
+            return;
+        }
 
         if (!resposta.ok) throw new Error('Falha ao salvar');
 

@@ -1,6 +1,6 @@
 // ===== FAVORITOS =====
 // Depende de auth.js já ter salvo o usuário logado no localStorage
-// com a chave 'usuario' contendo pelo menos { email: '...' }
+// com a chave 'usuario' contendo pelo menos { email: '...', token: '...' }
 
 function getUsuarioLogado() {
     const salvo = localStorage.getItem('usuario');
@@ -16,8 +16,8 @@ async function adicionarFavorito(botao) {
     }
 
     // Pega os dados do produto guardados no próprio botão (data-*)
+    // O e-mail não vai mais aqui: o servidor pega do token
     const dados = {
-        gmail: usuario.email,
         titulo: botao.dataset.titulo,
         imagem: botao.dataset.imagem,
         preco: botao.dataset.preco,
@@ -33,9 +33,21 @@ async function adicionarFavorito(botao) {
     try {
         const resposta = await fetch('/api/favoritos/adicionar', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + usuario.token
+            },
             body: JSON.stringify(dados)
         });
+
+        if (resposta.status === 401) {
+            localStorage.removeItem('usuario');
+            botao.disabled = false;
+            botao.classList.remove('favoritado');
+            botao.textContent = '🤍';
+            alert('Sua sessão expirou. Faça login novamente.');
+            return;
+        }
 
         if (!resposta.ok) {
             throw new Error('Falha ao favoritar');

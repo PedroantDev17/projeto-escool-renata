@@ -8,7 +8,7 @@
     <title>Entrar</title>
     <script src="user_login/scripts/entrar.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="Front-end/user_login/scripts/auth.js"></script>
+    <script src="user_login/scripts/auth.js"></script>
 </head>
 <body>
     <div id="container">
@@ -30,6 +30,7 @@
                  placeholder="Insira sua senha"
                  required>
                 <input type="submit" value="Entrar" onclick="entrar(event)">
+                
             </form>
         </section>
         <h2>ou</h2>
@@ -38,6 +39,7 @@
                     data-callback="handleGoogleLogin">
                 </div>
                 <div class="g_id_signin" data-type="standard"></div>
+                 <p id="contagem-login" style="color: red; display: none;"></p>
     </div>
 </body>
 </html>

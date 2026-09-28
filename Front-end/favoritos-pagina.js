@@ -34,14 +34,25 @@ async function abrirFavoritos(event) {
     `;
 
     try {
+        // O e-mail não vai mais no corpo: o servidor pega do token
         const resposta = await fetch('/api/favoritos/listar', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ gmail: usuario.email })
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + usuario.token
+            },
+            body: JSON.stringify({})
         });
 
         const containerProdutos = document.getElementById('container-produtos');
         if (!containerProdutos) return;
+
+        // Sessão expirada ou usuário logado antes da atualização (sem token)
+        if (resposta.status === 401) {
+            localStorage.removeItem('usuario');
+            containerProdutos.innerHTML = '<p style="text-align: center; width: 100%;">Sua sessão expirou. Faça login novamente para ver seus favoritos.</p>';
+            return;
+        }
 
         if (!resposta.ok) {
             containerProdutos.innerHTML = '<p style="text-align: center; color: red;">Erro ao buscar seus favoritos.</p>';
@@ -114,11 +125,23 @@ document.addEventListener('click', async function (event) {
     botao.disabled = true;
 
     try {
+        // O e-mail não vai mais no corpo: o servidor pega do token
         const resposta = await fetch('/api/favoritos/remover', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id_favorito: idFavorito, gmail: usuario.email })
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + usuario.token
+            },
+            body: JSON.stringify({ id_favorito: idFavorito })
         });
+
+        // Sessão expirada ou usuário logado antes da atualização (sem token)
+        if (resposta.status === 401) {
+            localStorage.removeItem('usuario');
+            botao.disabled = false;
+            alert('Sua sessão expirou. Faça login novamente.');
+            return;
+        }
 
         if (resposta.ok) {
             // remove o card da tela sem precisar recarregar a lista inteira

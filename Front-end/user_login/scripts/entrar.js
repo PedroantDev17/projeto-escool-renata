@@ -1,24 +1,59 @@
 async function handleGoogleLogin(response) {
+    console.log('1. Google chamou a função');
     try {
         const resposta = await fetch('/api/login-google', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token: response.credential })
         });
+        console.log('2. status:', resposta.status);
 
         if (!resposta.ok) {
-            window.alert('Não foi possível fazer login com o Google. Tente novamente.');
-            return;
+        const dados = await resposta.json().catch(() => ({}));
+        window.alert(dados.erro || 'Não foi possível fazer login com o Google. Tente novamente.');
+        return;
         }
 
         const usuario = await resposta.json();
+        console.log('3. usuário recebido:', usuario);
+
         localStorage.setItem('usuario', JSON.stringify(usuario));
+        console.log('4. salvo, redirecionando...');
 
         window.location.href = '../../../index.html';
     } catch (erro) {
         console.error('Erro no login com Google:', erro);
         window.alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
     }
+}
+
+let intervaloContagem = null;
+
+function iniciarContagem(segundos, botao) {
+    const aviso = document.getElementById('contagem-login');
+    const fim = Date.now() + segundos * 1000;
+
+    clearInterval(intervaloContagem);
+    if (botao) botao.disabled = true;
+
+    function atualizar() {
+        const restante = Math.ceil((fim - Date.now()) / 1000);
+
+        if (restante <= 0) {
+            clearInterval(intervaloContagem);
+            aviso.style.display = 'none';
+            if (botao) botao.disabled = false;
+            return;
+        }
+
+        const min = String(Math.floor(restante / 60)).padStart(2, '0');
+        const seg = String(restante % 60).padStart(2, '0');
+        aviso.textContent = `Muitas tentativas. Tente novamente em ${min}:${seg}`;
+        aviso.style.display = 'block';
+    }
+
+    atualizar();
+    intervaloContagem = setInterval(atualizar, 1000);
 }
 
 
@@ -92,14 +127,21 @@ async function entrar(event) {
                 email: dados_DaResposta.email,
                 // conta criada por senha pode não ter foto do Google —
                 // usa um avatar genérico nesse caso
-                foto: dados_DaResposta.foto || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(dados_DaResposta.nome || 'U')
+                foto: dados_DaResposta.foto || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(dados_DaResposta.nome || 'U'),
+                token: dados_DaResposta.token
             }));
 
             window.location.href = '../../../index.html';
             return true;
+         }        // Conta bloqueada: mostra a contagem regressiva na tela, sem alert
+        if (resposta.status === 429) {
+            const botao = event.target.querySelector('[type="submit"], button');
+            iniciarContagem(dados_DaResposta.segundos_restantes, botao);
+            return false;
         } else {
-            // Se o back-end avisou que a conta é do Google (sem senha), mostra essa mensagem específica
-            window.alert(dados_DaResposta.erro || 'Erro de login, tente novamente');
+            // Bloqueio (429) ou conta Google (400): a API manda a mensagem pronta.
+            // Senha ou e-mail errado: a API não manda 'erro', então usamos o texto padrão.
+            window.alert(dados_DaResposta.erro || 'E-mail ou senha incorretos.');
             return false;
         }
 

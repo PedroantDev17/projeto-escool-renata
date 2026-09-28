@@ -53,9 +53,19 @@ async function confirmarExclusaoConta() {
     try {
         const resposta = await fetch('/api/usuarios/excluir', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ gmail: usuario.email })
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + usuario.token
+            },
+            body: JSON.stringify({})
         });
+
+        if (resposta.status === 401) {
+            localStorage.removeItem('usuario');
+            alert('Sua sessão expirou. Faça login novamente.');
+            location.reload();
+            return;
+        }
 
         if (!resposta.ok) throw new Error('Falha ao excluir');
 
