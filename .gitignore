@@ -14,3 +14,5 @@ __pycache__/
 # banco local e configuração da Vercel
 *.db
 .vercel/
+
+.vscode/
