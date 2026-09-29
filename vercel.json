@@ -5,9 +5,10 @@
     "use": "@vercel/python"
   },
   {
-    "src": "**/*.{html,css,js,ico,png,jpg,svg}",
+    "src": "**/*.{html,css,js,ico,png,jpg,svg,mp4,webm}",
     "use": "@vercel/static"
   }
+  
 ],
   "routes": [
     {
