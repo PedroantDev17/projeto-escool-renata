@@ -87,6 +87,29 @@
 // } // <- Fecha a função Produto_cliente
 
 // Adicionamos 'termo' como argumento para a função saber o que buscar
+
+let htmlOriginalDaPagina = '';
+
+document.addEventListener("DOMContentLoaded", () => {
+    const telaPrincipal = document.querySelector('main') || document.getElementById('conteudo-principal');
+    if (telaPrincipal) {
+        htmlOriginalDaPagina = telaPrincipal.innerHTML;
+    }
+});
+
+// 🟢 ADICIONE ESTA NOVA FUNÇÃO: Restaura a tela inicial quando chamada
+function voltarParaInicio(event) {
+    if (event) event.preventDefault();
+    
+    const telaPrincipal = document.querySelector('main') || document.getElementById('conteudo-principal');
+    if (telaPrincipal && htmlOriginalDaPagina) {
+        telaPrincipal.innerHTML = htmlOriginalDaPagina;
+        
+        // Rola a tela de volta para o topo suavemente
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
 async function categorias(termo) {
     if (!termo) {
         console.error("Nenhum termo de busca foi fornecido.");
@@ -128,10 +151,11 @@ async function categorias(termo) {
 
     try {
         // 3. Faz a requisição para a API do ngrok
-        const resposta = await fetch('https://commute-doormat-operator.ngrok-free.dev/categoria', {
+        const resposta = await fetch('/api/categoria', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             body: JSON.stringify(dadosParaEnviar)
         });
@@ -157,6 +181,7 @@ async function categorias(termo) {
             listaProdutos.forEach(lista => {
                 const divProduto = document.createElement('div');
                 divProduto.classList.add('card-produto'); // Sua classe CSS da linha 212
+                divProduto.style.position = 'relative'; // necessário pro coração ficar no canto
 
                 const imagens = lista.imagem;
                 const iconImagem = lista.Icon_loja;
@@ -169,6 +194,14 @@ async function categorias(termo) {
 
                 // Montagem da estrutura de tags idêntica à esperada pelo seu CSS
                 divProduto.innerHTML = `
+                    <button type="button" class="btn-favoritar"
+                        data-titulo="${(titulo || '').replace(/"/g, '&quot;')}"
+                        data-imagem="${imagens || ''}"
+                        data-preco="${preco || ''}"
+                        data-loja="${(nomeLoja || '').replace(/"/g, '&quot;')}"
+                        data-link="${linkProduto || ''}"
+                        style="position:absolute; top:8px; right:8px; border:none; background:rgba(255,255,255,0.85); border-radius:50%; width:32px; height:32px; font-size:16px; cursor:pointer;">🤍</button>
+
                     <img src="${imagens}" alt="${titulo}" class="produto-img">
                     
                     <div class="marca-container">
@@ -211,7 +244,7 @@ async function categorias(termo) {
         console.error('Erro na conexão ao buscar API:', erro);
         const container = document.getElementById('container-produtos');
         if (container) {
-            container.innerHTML = '<p style="text-align: center; opacity: 0.7;">Não foi possível conectar ao servidor da API.</p>';
+            container.innerHTML = '<p style="text-align: center; opacity: 0.7;">Servidor com problemas, tente novamente mais tarde...</p>';
         }
     }
 }

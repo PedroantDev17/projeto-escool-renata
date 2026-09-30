@@ -8,17 +8,21 @@
     <title>Comparaí</title> 
     <link rel="stylesheet" href="https://googleapis.com" />
     <script src="Front-end/categorias.js" defer></script>
+<script src="Front-end/user_login/scripts/auth.js"></script>
+<script src="Front-end/favoritos.js" defer></script>
+<script src="Front-end/favoritos-pagina.js" defer></script>
+<script src="Front-end/perfil.js" defer></script>
+<script src="Front-end/configuracoes.js" defer></script>
 </head>
 <body>
     <header>
-        <a href="#"><img src="Front-end/favicon_io/apple-touch-icon.png" alt="logo" class="logotipo"></a>
+        <a href="#" onclick="voltarParaInicio(event)"><img src="Front-end/favicon_io/apple-touch-icon.png" alt="logo" class="logotipo"></a>
         <nav>
             <ul>
-                <li><a href="#">inicio</a></li>
+                <li><a onclick="voltarParaInicio(event)">inicio</a></li>
                 <li><a href="#tutorial">Como Funciona</a> </li>
                 <li><a onclick="categorias('termo'); event.preventDefault()">Categorias</a></li>
-                <li><a href="#">Favoritos</a></li>
-                <li><a href="#">Blog</a></li>
+                <li><a onclick="abrirFavoritos(event)">Favoritos</a></li>
             </ul>
             
         </nav>
@@ -30,6 +34,8 @@
                 <button class="create_cont" onclick="create_cont(event)">
                     Criar conta
                 </button>
+              
+                
         </div>
     </header>
 
@@ -81,7 +87,7 @@
                         
                         <!-- O segredo está em conectar o 'id' do input com o 'for' do label -->
                     
-                        <input type="submit" value="Comparar preços" onclick="Produto_cliente()">
+                        <input type="submit" value="Comparar preços" onclick="Produto_cliente()" class="resultado">
                 </div>
                 <span class="aviso"><p>Colocar somente 1 Produto!</p></span>
                 <p class="text_bottom">Ex:iPhone 15, Notebook Dell Fone Bluetooth</p> 
@@ -161,6 +167,6 @@
     </footer>
 
     
-    <script src="Front-end/produto.js" ></script>
+    <script src="Front-end/produto.js"></script>
 </body>
 </html>

@@ -1,4 +1,28 @@
-function create_dados(event) {
+async function handleGoogleLogin(response) {
+    try {
+        const resposta = await fetch('/api/login-google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: response.credential, criar: true })
+        });
+
+        if (!resposta.ok) {
+            window.alert('Não foi possível fazer login com o Google. Tente novamente.');
+            return;
+        }
+
+        const usuario = await resposta.json();
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+
+        window.location.href = '../../../index.html';
+    } catch (erro) {
+        console.error('Erro no login com Google:', erro);
+        window.alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
+    }
+}
+
+
+async function create_dados(event) {
     event.preventDefault();
     // Captura o texto digitado e remove espaços inúteis nas pontas com o .trim()
     let nome = document.getElementById('inome').value.trim();
@@ -8,10 +32,10 @@ function create_dados(event) {
     // 1. ANTISCRIPT: Remove qualquer caractere < ou > para impedir códigos HTML/Script
     const contemScript = /[<>]/;
     const python = /[=\-()]/;
-    
+
     if (contemScript.test(nome) || python.test(nome) || contemScript.test(email) || python.test(email) || contemScript.test(senha) || python.test(senha)) {
         window.alert('Cadastro incorreto! Caracteres inválidos detectados.');
-        window.location.href = '../video_presente/presente.html'
+       window.location.href = '/Front-end/video_presente/presente.html';
         return false;
     }
 
@@ -34,30 +58,51 @@ function create_dados(event) {
         return false;
     }
 
-    // 5. Validação da Senha (Apenas símbolos e caracteres especiais - SEM letras e SEM números)
-    // A regra abaixo diz: "Se encontrar qualquer letra (a-z, A-Z) ou número (0-9)"
+    // 5. Validação da Senha (mínimo 6 caracteres, misturando letra, número e especial)
     const senhaValida = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/.test(senha);
 
-    if (!senhaValida) { // O "!" significa: Se NÃO atender aos requisitos acima
-    window.alert('Cadastro incorreto! A senha deve ter pelo menos 6 caracteres e misturar letras, números e caracteres especiais (ex: 1234@teste).');
-    return false;
-}else{
-    window.location.href = '../../../index.html'
-     fetch('https://commute-doormat-operator.ngrok-free.dev/usuarios', {
-                method:'POST',
-                headers: {
-                    'content-Type':'application/json'
-                },
-                body:JSON.stringify({
-                    'nome':nome,
-                    'email':email,
-                    'senha':senha
-                })
+    if (!senhaValida) {
+        window.alert('Cadastro incorreto! A senha deve ter pelo menos 6 caracteres e misturar letras, números e caracteres especiais (ex: 1234@teste).');
+        return false;
+    }
+
+    // Só redireciona DEPOIS de confirmar que o cadastro deu certo no servidor
+    try {
+        const resposta = await fetch('/api/usuarios', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            },
+            body: JSON.stringify({
+                'nome': nome,
+                'email': email,
+                'senha': senha
             })
-    return true;
-}
+        });
 
-    // Se passou por todas as regras sem dar "return false"
-    
-}
+        const dados = await resposta.json();
 
+        if (!resposta.ok) {
+            // ex: e-mail já cadastrado (409) — mostra a mensagem que o back-end mandou
+            window.alert(dados.erro || 'Não foi possível criar sua conta. Tente novamente.');
+            return false;
+        }
+
+        // Cadastro deu certo: já loga a pessoa automaticamente,
+        // igual acontece no login pelo Google
+        localStorage.setItem('usuario', JSON.stringify({
+            nome: nome,
+            email: email,
+            foto: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nome)
+        }));
+
+        window.location.href = '../../../index.html';
+        return true;
+
+    } catch (erro) {
+        console.error('Erro na comunicação com a API:', erro);
+        window.alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
+        return false;
+    }
+}

@@ -1,0 +1,13 @@
+# segredos
+.env
+.env.*
+*.pem
+ngrok.txt
+
+# dependências e lixo local
+venv/
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+*.db

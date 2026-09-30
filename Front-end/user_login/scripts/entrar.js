@@ -1,68 +1,61 @@
-// function create_dados(event) {
-//              event.preventDefault();
-//     // Captura o texto digitado e remove espaços inúteis nas pontas com o .trim()
-//     let email = document.getElementById('iemail').value.trim();
-//     let senha = document.getElementById('isenha').value.trim();
+async function handleGoogleLogin(response) {
+    console.log('1. Google chamou a função');
+    try {
+        const resposta = await fetch('/api/login-google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: response.credential })
+        });
+        console.log('2. status:', resposta.status);
 
-//     // 1. ANTISCRIPT: Remove qualquer caractere < ou > para impedir códigos HTML/Script
-//     const contemScript = /[<>]/;
-//     const python = /[=\-()]/;
+        if (!resposta.ok) {
+        const dados = await resposta.json().catch(() => ({}));
+        window.alert(dados.erro || 'Não foi possível fazer login com o Google. Tente novamente.');
+        return;
+        }
 
-//     if (contemScript.test(email) || python.test(email) || contemScript.test(senha) || python.test(senha)) {
-//         window.alert('Cadastro incorreto! Caracteres inválidos detectados.');
-//         window.location.href = '../video_presente/presente.html'
-//         return false;
-//     }
+        const usuario = await resposta.json();
+        console.log('3. usuário recebido:', usuario);
 
-//     // 2. Validação de campos vazios
-//     if ( email === "" || senha === "") {
-//         window.alert('Cadastro incorreto! Preencha todos os campos.');
-//         return false;
-//     }
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+        console.log('4. salvo, redirecionando...');
 
-//     // 3. Validação do Nome (Não pode ter números de 0 a 9)
+        window.location.href = '../../../index.html';
+    } catch (erro) {
+        console.error('Erro no login com Google:', erro);
+        window.alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
+    }
+}
 
-//     // 4. Validação do Email (Obrigatório ter o caractere @)
-//     if (!email.includes('@')) {
-//         window.alert('Cadastro incorreto! Digite um e-mail válido com @.');
-//         return false;
-//     }
+let intervaloContagem = null;
 
-//     // 5. Validação da Senha (Apenas símbolos e caracteres especiais - SEM letras e SEM números)
-//     // A regra abaixo diz: "Se encontrar qualquer letra (a-z, A-Z) ou número (0-9)"
-//     const senhaValida = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/.test(senha);
+function iniciarContagem(segundos, botao) {
+    const aviso = document.getElementById('contagem-login');
+    const fim = Date.now() + segundos * 1000;
 
-//     if (!senhaValida) { // O "!" significa: Se NÃO atender aos requisitos acima
-//     window.alert('Cadastro incorreto! A senha deve ter pelo menos 6 caracteres e misturar letras, números e caracteres especiais (ex: 2026@teste).');
-//         try{
-//         fetch('https://commute-doormat-operator.ngrok-free.dev/login', {
-//                     method:'POST',
-//                     headers: {
-//                         'content-Type':'application/json'
-//                     },
-//                     body:JSON.stringify({
-//                         'email':email,
-//                         'senha':senha
-//                     })
-//                 });
+    clearInterval(intervaloContagem);
+    if (botao) botao.disabled = true;
 
-//         } 
-//         catch (erro) {
-//         // Captura erros de rede (como o ngrok estar offline)
-//         console.error("Erro na comunicação com a API:", erro);
-//         window.alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
-//         return false;
-//     }
-//  }
-//  else{
-        
-//      // Se passou por todas as regras sem dar "return false"
-       
-       
-//  } 
-//   window.location.href = '../../../index.html' 
-//   return true;
-// }
+    function atualizar() {
+        const restante = Math.ceil((fim - Date.now()) / 1000);
+
+        if (restante <= 0) {
+            clearInterval(intervaloContagem);
+            aviso.style.display = 'none';
+            if (botao) botao.disabled = false;
+            return;
+        }
+
+        const min = String(Math.floor(restante / 60)).padStart(2, '0');
+        const seg = String(restante % 60).padStart(2, '0');
+        aviso.textContent = `Muitas tentativas. Tente novamente em ${min}:${seg}`;
+        aviso.style.display = 'block';
+    }
+
+    atualizar();
+    intervaloContagem = setInterval(atualizar, 1000);
+}
+
 
 // Adicionamos 'async' antes da função para permitir o uso de 'await'
 async function entrar(event) {
@@ -80,7 +73,8 @@ async function entrar(event) {
 
     if (contemScript.test(email) || injeçãoCaracteres.test(email) || contemScript.test(senha) || injeçãoCaracteres.test(senha)) {
         window.alert('Cadastro incorreto! Caracteres inválidos detectados.');
-        window.location.href = '../video_presente/presente.html';
+
+       window.location.href = '/Front-end/video_presente/presente.html';
         return false;
     }
 
@@ -107,10 +101,11 @@ async function entrar(event) {
     // Se o código chegou até aqui, os dados são válidos. Iniciamos o envio:
     try {
         // CORREÇÃO: Aguarda o envio do fetch terminar para não cancelar a requisição
-        const resposta = await fetch('https://commute-doormat-operator.ngrok-free.dev/login', {
+        const resposta = await fetch('/api/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json' // Corrigido o 'C' maiúsculo de Content-Type
+                'Content-Type': 'application/json', // Corrigido o 'C' maiúsculo de Content-Type
+                'ngrok-skip-browser-warning': 'true'
             },
             body: JSON.stringify({
                 'email': email,
@@ -126,10 +121,28 @@ async function entrar(event) {
             console.log("Resposta da API:",dados_DaResposta);
             window.alert(`Bem-vindo, ${dados_DaResposta.usuario || 'Login realizado com sucesso!'}`);
 
+            // Salva o usuário logado, igual o login do Google já faz —
+            // sem isso, o menu do header não sabe que alguém está logado
+            localStorage.setItem('usuario', JSON.stringify({
+                nome: dados_DaResposta.nome,
+                email: dados_DaResposta.email,
+                // conta criada por senha pode não ter foto do Google —
+                // usa um avatar genérico nesse caso
+                foto: dados_DaResposta.foto || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(dados_DaResposta.nome || 'U'),
+                token: dados_DaResposta.token
+            }));
+
             window.location.href = '../../../index.html';
             return true;
+         }        // Conta bloqueada: mostra a contagem regressiva na tela, sem alert
+        if (resposta.status === 429) {
+            const botao = event.target.querySelector('[type="submit"], button');
+            iniciarContagem(dados_DaResposta.segundos_restantes, botao);
+            return false;
         } else {
-            window.alert('Erro de login, tente novamente');
+            // Bloqueio (429) ou conta Google (400): a API manda a mensagem pronta.
+            // Senha ou e-mail errado: a API não manda 'erro', então usamos o texto padrão.
+            window.alert(dados_DaResposta.erro || 'E-mail ou senha incorretos.');
             return false;
         }
 
@@ -140,4 +153,3 @@ async function entrar(event) {
         return false;
     }
 }
-
