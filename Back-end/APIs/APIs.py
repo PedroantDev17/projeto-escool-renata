@@ -220,7 +220,10 @@ def buscar_ou_criar_usuario(email, nome, foto, criar=False):
 
 
 # Garante que a tabela existe quando a API sobe
-criar_tabela_se_nao_existir()
+try:
+    criar_tabela_se_nao_existir()
+except Exception as e:
+    print("Falha ao criar tabela:", e)
 
 
 @app.route('/api/produtos', methods=['POST'])
