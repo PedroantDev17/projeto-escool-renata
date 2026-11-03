@@ -29,7 +29,7 @@ function abrirConfiguracoes(event) {
         </div>
         <div style="max-width: 400px; margin: 20px auto; background: #fff; border-radius: 10px; padding: 30px; box-shadow: 4px 4px 10px rgba(0,0,0,0.116);">
             <h3 style="font-size: 16px; margin-bottom: 8px;">Conta</h3>
-            <p style="font-size: 13px; opacity: 0.7; margin-bottom: 20px;">${usuario.email}</p>
+            <p style="font-size: 13px; opacity: 0.7; margin-bottom: 20px;">${escapeHTML(usuario.email)}</p>
 
             <button id="btn-excluir-conta" type="button"
                 style="background-color: #c0392b; color: #fff; border: none; border-radius: 10px; padding: 10px 20px; cursor: pointer; width: 100%;">

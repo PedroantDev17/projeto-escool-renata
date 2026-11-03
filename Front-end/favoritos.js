@@ -1,22 +1,17 @@
-// ===== FAVORITOS =====
-// Depende de auth.js já ter salvo o usuário logado no localStorage
+// ===== FAVORITOS (botão de coração nos cards) =====
+// Depende de utils.js (getUsuarioLogado) e do usuário salvo no localStorage
 // com a chave 'usuario' contendo pelo menos { email: '...', token: '...' }
-
-function getUsuarioLogado() {
-    const salvo = localStorage.getItem('usuario');
-    return salvo ? JSON.parse(salvo) : null;
-}
 
 async function adicionarFavorito(botao) {
     const usuario = getUsuarioLogado();
 
-    if (!usuario) {
+    if (!usuario || !usuario.token) {
         alert('Faça login para favoritar produtos.');
         return;
     }
 
     // Pega os dados do produto guardados no próprio botão (data-*)
-    // O e-mail não vai mais aqui: o servidor pega do token
+    // O e-mail não vai aqui: o servidor pega do token
     const dados = {
         titulo: botao.dataset.titulo,
         imagem: botao.dataset.imagem,
@@ -30,6 +25,12 @@ async function adicionarFavorito(botao) {
     botao.classList.add('favoritado');
     botao.textContent = '💙';
 
+    function desfazerVisual() {
+        botao.disabled = false;
+        botao.classList.remove('favoritado');
+        botao.textContent = '🤍';
+    }
+
     try {
         const resposta = await fetch('/api/favoritos/adicionar', {
             method: 'POST',
@@ -42,10 +43,9 @@ async function adicionarFavorito(botao) {
 
         if (resposta.status === 401) {
             localStorage.removeItem('usuario');
-            botao.disabled = false;
-            botao.classList.remove('favoritado');
-            botao.textContent = '🤍';
+            desfazerVisual();
             alert('Sua sessão expirou. Faça login novamente.');
+            location.reload();
             return;
         }
 
@@ -55,9 +55,7 @@ async function adicionarFavorito(botao) {
     } catch (erro) {
         console.error('Erro ao favoritar:', erro);
         // desfaz o feedback visual se der erro
-        botao.disabled = false;
-        botao.classList.remove('favoritado');
-        botao.textContent = '🤍';
+        desfazerVisual();
         alert('Não foi possível favoritar agora. Tente de novo.');
     }
 }

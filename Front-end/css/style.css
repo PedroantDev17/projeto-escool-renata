@@ -519,5 +519,51 @@ nav > ul > li {
 }
 
 
+/* ===== Cards de produto (antes eram estilos soltos dentro do JS) ===== */
+.card-produto {
+    position: relative;
+}
 
+.btn-card {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    cursor: pointer;
+}
 
+.produto-titulo {
+    font-size: 16px;
+    margin: 8px 0;
+    text-align: left;
+}
+
+.esrelas {
+    font-size: 13px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.produto-preco {
+    font-weight: bold;
+    color: var(--blue-escuro);
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.produto-link {
+    display: block;
+    text-align: center;
+    background-color: var(--blue-escuro);
+    color: #fff;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-top: auto;
+}

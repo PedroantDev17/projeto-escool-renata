@@ -28,12 +28,12 @@ function abrirPerfil(event) {
             </div>
         </div>
         <div style="max-width: 400px; margin: 20px auto; background: #fff; border-radius: 10px; padding: 30px; box-shadow: 4px 4px 10px rgba(0,0,0,0.116); text-align: center;">
-            <img src="${usuario.foto}" alt="Foto de perfil" style="width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--blue-escuro); object-fit: cover; margin-bottom: 15px;">
+            <img src="${escapeHTML(fotoDoUsuario(usuario))}" alt="Foto de perfil" style="width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--blue-escuro); object-fit: cover; margin-bottom: 15px;">
 
-            <p style="opacity: 0.6; font-size: 13px; margin-bottom: 20px;">${usuario.email}</p>
+            <p style="opacity: 0.6; font-size: 13px; margin-bottom: 20px;">${escapeHTML(usuario.email)}</p>
 
             <label for="input-nome-perfil" style="display: block; text-align: left; font-size: 13px; margin-bottom: 5px; opacity: 0.7;">Nome</label>
-            <input type="text" id="input-nome-perfil" value="${usuario.nome}"
+            <input type="text" id="input-nome-perfil" value="${escapeHTML(usuario.nome)}" maxlength="50"
                 style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px; box-sizing: border-box;">
 
             <button id="btn-salvar-perfil" type="button"
@@ -77,7 +77,12 @@ async function salvarNomePerfil() {
             return;
         }
 
-        if (!resposta.ok) throw new Error('Falha ao salvar');
+        if (!resposta.ok) {
+            const dados = await resposta.json().catch(() => ({}));
+            msg.textContent = dados.erro || 'Não foi possível salvar agora. Tente de novo.';
+            msg.style.color = 'red';
+            return;
+        }
 
         // Atualiza o usuário salvo localmente, pra refletir o novo nome no menu de perfil também
         usuario.nome = novoNome;

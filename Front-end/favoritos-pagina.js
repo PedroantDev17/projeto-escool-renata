@@ -1,3 +1,6 @@
+// ===== PÁGINA "SEUS FAVORITOS" =====
+// Depende de utils.js
+
 async function abrirFavoritos(event) {
     if (event) event.preventDefault();
 
@@ -6,7 +9,7 @@ async function abrirFavoritos(event) {
     const telaPrincipal = document.querySelector('main');
     if (!telaPrincipal) return;
 
-    if (!usuario) {
+    if (!usuario || !usuario.token) {
         telaPrincipal.innerHTML = `
             <div class="categorias" style="width: 100%; text-align: center; margin-bottom: 20px;">
                 <div class="text-final">
@@ -34,7 +37,7 @@ async function abrirFavoritos(event) {
     `;
 
     try {
-        // O e-mail não vai mais no corpo: o servidor pega do token
+        // O e-mail não vai no corpo: o servidor pega do token
         const resposta = await fetch('/api/favoritos/listar', {
             method: 'POST',
             headers: {
@@ -55,7 +58,7 @@ async function abrirFavoritos(event) {
         }
 
         if (!resposta.ok) {
-            containerProdutos.innerHTML = '<p style="text-align: center; color: red;">Erro ao buscar seus favoritos.</p>';
+            containerProdutos.innerHTML = '<p style="text-align: center; width: 100%; color: #c0392b;">Erro ao buscar seus favoritos.</p>';
             return;
         }
 
@@ -67,47 +70,15 @@ async function abrirFavoritos(event) {
             return;
         }
 
-        listaFavoritos.forEach(item => {
-            const divProduto = document.createElement('div');
-            divProduto.classList.add('card-produto');
-            divProduto.style.position = 'relative';
-
-            divProduto.innerHTML = `
-                <button type="button" class="btn-remover-favorito"
-                    data-id="${item.id_favorito}"
-                    style="position:absolute; top:8px; right:8px; border:none; background:rgba(255,255,255,0.85); border-radius:50%; width:32px; height:32px; font-size:16px; cursor:pointer;">🗑️</button>
-
-                <img src="${item.imagem}" alt="${item.titulo}" class="produto-img">
-
-                <div class="marca-container">
-                    <span class="produto-loja">${item.loja || ''}</span>
-                </div>
-
-                <h3 class="produto-titulo" style="font-size: 16px; margin: 8px 0; text-align: left;">${item.titulo}</h3>
-
-                <p class="produto-preco" style="font-weight: bold; color: var(--blue-escuro); margin-bottom: 10px; text-align: left;">R$ ${item.preco}</p>
-
-                <a href="${item.link}" target="_blank" class="produto-link" style="
-                    display: block;
-                    text-align: center;
-                    background-color: var(--blue-escuro);
-                    color: white;
-                    text-decoration: none;
-                    padding: 8px;
-                    border-radius: 5px;
-                    font-size: 14px;
-                    margin-top: auto;
-                ">Ver na Loja</a>
-            `;
-
-            containerProdutos.appendChild(divProduto);
+        listaFavoritos.forEach((item) => {
+            containerProdutos.appendChild(criarElementoCard(item, { modo: 'favorito' }));
         });
 
     } catch (erro) {
         console.error('Erro ao carregar favoritos:', erro);
         const container = document.getElementById('container-produtos');
         if (container) {
-            container.innerHTML = '<p style="text-align: center; opacity: 0.7;">Servidor com problemas, tente novamente mais tarde...</p>';
+            container.innerHTML = '<p style="text-align: center; width: 100%; opacity: 0.7;">Servidor com problemas, tente novamente mais tarde...</p>';
         }
     }
 }
@@ -118,14 +89,13 @@ document.addEventListener('click', async function (event) {
     if (!botao) return;
 
     const usuario = getUsuarioLogado();
-    if (!usuario) return;
+    if (!usuario || !usuario.token) return;
 
     const idFavorito = botao.dataset.id;
 
     botao.disabled = true;
 
     try {
-        // O e-mail não vai mais no corpo: o servidor pega do token
         const resposta = await fetch('/api/favoritos/remover', {
             method: 'POST',
             headers: {
@@ -140,6 +110,7 @@ document.addEventListener('click', async function (event) {
             localStorage.removeItem('usuario');
             botao.disabled = false;
             alert('Sua sessão expirou. Faça login novamente.');
+            location.reload();
             return;
         }
 

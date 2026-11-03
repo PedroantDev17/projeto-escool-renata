@@ -8,7 +8,6 @@
     <title>Cadastro</title>
    <script src="user_login/scripts/create_user.js"></script>
    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="Front-end/user_login/scripts/auth.js"></script>
 
 </head>
 <body>
@@ -18,11 +17,12 @@
         </section>
         <section class="formulario">
             <form action="#" method="post" onsubmit="return create_dados(event)">
-                <label for="iname">Nome: <span>*</span></label>
+                <label for="inome">Nome: <span>*</span></label>
                 <input type="text"
                 required
                 name="nome"
                 id="inome"
+                maxlength="50"
                 placeholder="Coloque seu nome">
 
                 <label for="iemail">Gmail: <span>*</span></label>
@@ -38,8 +38,9 @@
                 name="senha"
                  id="isenha"
                  placeholder="Insira sua senha"
+                 autocomplete="new-password"
                  required>
-                <input type="submit" value="Entrar">
+                <input type="submit" value="Criar conta">
             </form>
         </section>
         <h2>ou</h2>

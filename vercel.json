@@ -5,7 +5,7 @@
     "use": "@vercel/python"
   },
   {
-    "src": "**/*.{html,css,js,ico,png,jpg,svg,mp4,webm}",
+    "src": "**/*.{html,css,js,ico,png,jpg,svg,mp4,webm,webmanifest}",
     "use": "@vercel/static"
   }
   
