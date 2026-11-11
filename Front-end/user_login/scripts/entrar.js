@@ -120,11 +120,13 @@ async function entrar(event) {
         }
 
         // Senha/e-mail errados (401) ou outro erro: usa a mensagem que o servidor mandou
-        window.alert(dados.erro || 'E-mail ou senha incorretos.');
+      const mensagem = document.getElementById('mensagem-erro');
+if (mensagem) mensagem.textContent = dados.erro || 'E-mail ou senha incorretos.';
         return false;
 
     } catch (erro) {
-        console.error('Erro na comunicação com a API:', erro);
+        const mensagem = document.getElementById('mensagem-erro');
+if (mensagem) mensagem.textContent = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
         window.alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
         return false;
     }
