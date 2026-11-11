@@ -1,0 +1,30 @@
+.chatbot-abrir {
+    position: fixed; z-index: 1000; left: 22px; bottom: 22px;
+    display: flex; align-items: center; gap: 9px; padding: 14px 18px;
+    border: 0; border-radius: 999px; background: #000091; color: #fff;
+    box-shadow: 0 8px 26px #0003; font: 600 15px Arial, sans-serif; cursor: pointer;
+}
+.chatbot-abrir span:first-child { font-size: 20px; }
+.chatbot-abrir:hover { background: #1717bb; }
+.chatbot-painel {
+    position: fixed; z-index: 1001; left: 22px; bottom: 82px; width: min(360px, calc(100vw - 32px));
+    height: min(480px, calc(100vh - 115px)); display: flex; flex-direction: column;
+    overflow: hidden; border: 1px solid #e2e2eb; border-radius: 16px; background: #fff;
+    box-shadow: 0 12px 40px #1113; font-family: Arial, Helvetica, sans-serif; color: #202030;
+}
+.chatbot-painel[hidden] { display: none; }
+.chatbot-cabecalho { display: flex; align-items: center; justify-content: space-between; padding: 16px; color: #fff; background: #000091; }
+.chatbot-cabecalho div { display: grid; gap: 4px; }
+.chatbot-cabecalho span { font-size: 12px; opacity: .8; }
+.chatbot-fechar { border: 0; background: none; color: #fff; font-size: 26px; cursor: pointer; }
+.chatbot-mensagens { flex: 1; overflow: auto; padding: 14px; background: #f7f7fb; }
+.chatbot-mensagem { max-width: 88%; margin: 0 0 10px; padding: 11px 12px; border-radius: 12px; font-size: 14px; line-height: 1.45; }
+.chatbot-bot { background: #fff; border: 1px solid #e8e8ef; }
+.chatbot-usuario { margin-left: auto; color: #fff; background: #000091; }
+.chatbot-sugestoes { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0 14px; }
+.chatbot-sugestoes button { padding: 8px 10px; border: 1px solid #cfcfe4; border-radius: 999px; color: #000091; background: #fff; cursor: pointer; }
+.chatbot-form { display: flex; gap: 8px; padding: 12px; border-top: 1px solid #eee; }
+.chatbot-form input { min-width: 0; flex: 1; margin: 0; padding: 11px; border: 1px solid #d6d6df; border-radius: 9px; font-size: 14px; }
+.chatbot-form button { width: 42px; border: 0; border-radius: 9px; background: #000091; color: #fff; font-size: 18px; cursor: pointer; }
+.chatbot-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (max-width: 500px) { .chatbot-abrir { left: 14px; bottom: 14px; } .chatbot-painel { left: 12px; bottom: 74px; width: calc(100vw - 24px); } }

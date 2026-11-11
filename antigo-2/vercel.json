@@ -1,0 +1,23 @@
+{
+  "builds": [
+  {
+    "src": "Back-end/APIs/APIs.py",
+    "use": "@vercel/python"
+  },
+  {
+    "src": "**/*.{html,css,js,ico,png,jpg,svg,mp4,webm,webmanifest}",
+    "use": "@vercel/static"
+  }
+  
+],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "Back-end/APIs/APIs.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

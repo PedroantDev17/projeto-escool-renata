@@ -28,6 +28,45 @@ function formatarPreco(preco) {
     return /R\$/.test(texto) ? texto : 'R$ ' + texto;
 }
 
+// Converte preços brasileiros ("R$ 1.299,90") para número para ordenação.
+function valorNumericoPreco(preco) {
+    const texto = String(preco ?? '').replace(/[^\d,.-]/g, '').trim();
+    if (!texto) return Number.POSITIVE_INFINITY;
+    const normalizado = texto.includes(',')
+        ? texto.replace(/\./g, '').replace(',', '.')
+        : texto;
+    const valor = Number(normalizado);
+    return Number.isFinite(valor) ? valor : Number.POSITIVE_INFINITY;
+}
+
+function ordenarProdutosPorPreco(lista, ordem) {
+    return [...lista].sort((a, b) => {
+        const diferenca = valorNumericoPreco(a.preco) - valorNumericoPreco(b.preco);
+        return ordem === 'maior-menor' ? -diferenca : diferenca;
+    });
+}
+
+function renderizarOrdenacaoPreco(container, lista, opcoes = {}) {
+    const controles = document.createElement('div');
+    controles.className = 'ordenacao-preco';
+    controles.innerHTML = `
+        <label for="ordenar-preco">Ordenar por preço</label>
+        <select id="ordenar-preco" aria-label="Ordenar produtos por preço">
+            <option value="menor-maior">Menor para maior</option>
+            <option value="maior-menor">Maior para menor</option>
+        </select>`;
+    const vitrine = document.createElement('div');
+    vitrine.className = 'vitrine-produtos';
+    vitrine.id = 'lista-produtos-ordenada';
+    container.replaceChildren(controles, vitrine);
+    const desenhar = () => {
+        vitrine.replaceChildren(...ordenarProdutosPorPreco(lista, controles.querySelector('select').value)
+            .map(item => criarElementoCard(item, opcoes)));
+    };
+    controles.querySelector('select').addEventListener('change', desenhar);
+    desenhar();
+}
+
 // Usuário salvo no navegador ({ nome, email, foto, token }) ou null.
 function getUsuarioLogado() {
     try {

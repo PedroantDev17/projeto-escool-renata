@@ -72,9 +72,7 @@ async function categorias(event) {
             return;
         }
 
-        listaProdutos.forEach((item) => {
-            container.appendChild(criarElementoCard(item, { modo: 'busca' }));
-        });
+        renderizarOrdenacaoPreco(container, listaProdutos, { modo: 'busca' });
 
         container.scrollIntoView({ behavior: 'smooth' });
 

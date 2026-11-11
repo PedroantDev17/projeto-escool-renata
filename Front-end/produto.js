@@ -62,9 +62,7 @@ async function Produto_cliente() {
             return;
         }
 
-        listaProdutos.forEach((item) => {
-            container.appendChild(criarElementoCard(item, { modo: 'busca' }));
-        });
+        renderizarOrdenacaoPreco(container, listaProdutos, { modo: 'busca' });
 
         // rola até os resultados uma vez só (antes rolava a cada produto)
         document.getElementById('icategorias').scrollIntoView({ behavior: 'smooth', block: 'start' });
