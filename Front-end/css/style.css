@@ -20,7 +20,7 @@ body{
     
     background-color: #ece8e8;
 }
-header{
+header.cabeçalho-pagina-principal{
   display: grid;
     grid-auto-flow: column;
     align-items: center;
