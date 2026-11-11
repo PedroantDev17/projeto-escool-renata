@@ -27,7 +27,7 @@ header.cabeçalho-pagina-principal{
     justify-content: space-between;
     margin: auto 30px;
 }
-header > a img {
+header.cabeçalho-pagina-principal > a img {
     width: 90px;
     margin: 10px;
 }
@@ -400,7 +400,7 @@ footer{
 /* responsividade */
 
 @media screen and (max-width:500px) {
-        header {
+        header.cabeçalho-pagina-principal {
         display: grid;
         margin: auto 30px;
         justify-items: center;
