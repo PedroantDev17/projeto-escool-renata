@@ -32,7 +32,7 @@
         { termos: ['conta', 'cadastro', 'criar', 'entrar', 'login', 'senha', 'acesso'], texto: 'Use “Criar conta” para se cadastrar ou “Entrar” se já tiver uma conta. Se o acesso falhar, confira o e-mail e a senha e tente novamente.' },
         { termos: ['favorit', 'salvar', 'coração'], texto: 'Entre na sua conta e toque no coração do produto para salvá-lo. Depois, abra “Favoritos” no menu para consultar ou remover itens.' },
         { termos: ['loja', 'comprar', 'link'], texto: 'Nos resultados, toque em “Ver na Loja” para abrir a página da loja. Confira o preço e as condições diretamente com o vendedor antes de comprar.' },
-        { termos: ['suporte', 'atendente', 'humano', 'contato', 'problema', 'erro'], texto: 'Este assistente responde dúvidas comuns do Comparaí. Para problemas técnicos, tente novamente mais tarde; ainda não há um canal de atendimento humano configurado neste site.' }
+        { termos: ['suporte', 'atendente', 'humano', 'contato', 'problema', 'erro'], texto: 'Este assistente responde dúvidas comuns do Comparaí. Para falar com o suporte, envie um e-mail para suporte.comparai@gmail.com.', link: 'mailto:suporte.comparai@gmail.com' }
     ];
 
     function responder(pergunta) {
@@ -48,6 +48,13 @@
         retorno.className = 'chatbot-mensagem chatbot-bot';
         retorno.textContent = resposta ? resposta.texto : 'Ainda não sei responder a essa dúvida. Posso ajudar com comparação de preços, conta e favoritos. Tente perguntar sobre um desses assuntos.';
         mensagens.append(retorno);
+        if (resposta && resposta.link) {
+            const link = document.createElement('a');
+            link.href = resposta.link;
+            link.className = 'chatbot-link-suporte';
+            link.textContent = 'Enviar e-mail ao suporte';
+            mensagens.append(link);
+        }
         mensagens.scrollTop = mensagens.scrollHeight;
     }
 
