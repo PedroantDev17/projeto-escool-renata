@@ -1,5 +1,10 @@
 // ===== PÁGINA DE LOGIN =====
 
+//script detectando invazão
+ const valor = campo.value.trim();
+
+if (!validarEntrada(valor)) return;
+
 async function handleGoogleLogin(response) {
     try {
         const resposta = await fetch('/api/login-google', {
@@ -61,15 +66,6 @@ async function entrar(event) {
     // (espaço pode fazer parte da senha).
     const email = document.getElementById('iemail').value.trim();
     const senha = document.getElementById('isenha').value;
-
-    // 1. ANTISCRIPT: quem tenta colocar <script> ou HTML no e-mail ganha um presente 😄
-    // (A proteção de verdade é feita no servidor e ao exibir os dados na tela;
-    // isto aqui é só a brincadeira. Senhas podem ter qualquer caractere.)
-    if (/[<>]/.test(email)) {
-        window.alert('Login incorreto! Caracteres inválidos detectados.');
-        window.location.href = 'video_presente/presente.html';
-        return false;
-    }
 
     // 2. Campos vazios
     if (email === '' || senha === '') {

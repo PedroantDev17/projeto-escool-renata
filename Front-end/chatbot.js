@@ -1,3 +1,8 @@
+ const valor = campo.value.trim();
+
+if (!validarEntrada(valor)) return;
+
+
 (function () {
     const botao = document.createElement('button');
     botao.className = 'chatbot-abrir';

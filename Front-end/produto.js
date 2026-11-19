@@ -1,16 +1,7 @@
 // ===== BUSCA DE PRODUTOS (página inicial) =====
- const PADROES_SUSPEITOS = [
-            /[<>]/,                                              // HTML / script
-            /\b(drop|delete|truncate|alter|insert|update|union|select)\b[\s\S]*\b(table|from|into|set|all)\b/i, // SQL
-            /(--|;|\/\*|\*\/)/,                                  // comentários e fim de comando SQL
-            /\b(or|and)\b\s+\d+\s*=\s*\d+/i,                     // ' OR 1=1
-            /javascript:|on\w+\s*=/i,                            // XSS em atributos
-            /\.\.[\/\\]/,                                        // path traversal (../)
-            /(\$\(|`|\|\||&&)/,                                  // injeção de comandos
-        ];
-        function entradaSuspeita(texto) {
-        return PADROES_SUSPEITOS.some(p => p.test(texto));
-    }
+ const valor = campo.value.trim();
+
+if (!validarEntrada(valor)) return;
 
 function criarSecaoCategorias() {
     // Limpa o container antes de criar para não duplicar se pesquisar de novo
