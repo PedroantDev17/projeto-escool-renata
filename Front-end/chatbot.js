@@ -73,7 +73,7 @@
         event.preventDefault();
         const input = painel.querySelector('input');
 
-        if (!validarEntrada(valor)) return;
+        if (!validarEntrada(input)) return;
         
         responder(input.value);
         input.value = '';
