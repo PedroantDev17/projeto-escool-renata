@@ -1,8 +1,4 @@
 // ===== BUSCA DE PRODUTOS (página inicial) =====
- const valor = campo.value.trim();
-
-if (!validarEntrada(valor)) return;
-
 function criarSecaoCategorias() {
     // Limpa o container antes de criar para não duplicar se pesquisar de novo
     const containerCategorias = document.getElementById('icategorias');
@@ -26,6 +22,9 @@ async function Produto_cliente() {
     const campo = document.getElementById('Produtos');
     const botao = document.querySelector('.inputs .resultado');
     const container = document.getElementById('container-produtos');
+    
+    if (!validarEntrada(valor)) return;
+
     if (!campo || !container) return;
 
     const valor = campo.value.trim();
