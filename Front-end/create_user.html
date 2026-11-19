@@ -20,7 +20,7 @@
         </section>
         <section class="formulario">
             <form action="#" method="post" onsubmit="return create_dados(event)">
-                <label for="inome">Nome: <span>*</span></label>
+                <label for="inome">Nome: <span class="obrigatorio">*</span></label>
                 <input type="text"
                 required
                 name="nome"
@@ -28,7 +28,7 @@
                 maxlength="50"
                 placeholder="Coloque seu nome">
 
-                <label for="iemail">Gmail: <span>*</span></label>
+                <label for="iemail">Gmail: <span class="obrigatorio">*</span></label>
                 <input type="email"
                  name="email" 
                  id="iemail" 
@@ -36,7 +36,7 @@
                  required
                  autocomplete="off">
                  
-                <label for="isenha">Senha: <span>*</span></label>
+                <label for="isenha">Senha: <span class="obrigatorio">*</span></label>
                 <input type="password" 
                 name="senha"
                  id="isenha"
