@@ -55,41 +55,9 @@
                     autocomplete="off"
                     id="Produtos"
                     name="Produto"
-                    list="produtos_eletronicos" placeholder="Digite o nome do produto...">
-                    <datalist id="produtos_eletronicos">                 
-                         <!-- Smartphones -->
-                            <option value="iPhone 15 Pro Max"></option>
-                            <option value="iPhone 14 128GB"></option>
-                            <option value="Samsung Galaxy S24 Ultra"></option>
-                            <option value="Samsung Galaxy A55"></option>
-                            <option value="Xiaomi Redmi Note 13"></option>
-                            <!-- Informática -->
-                            <option value="Notebook Dell Inspiron i15"></option>
-                            <option value="MacBook Air M2 Apple"></option>
-                            <option value="Monitor Gamer 24 Full HD"></option>
-                            <option value="SSD Kingston 1TB NVMe"></option>
-                            <option value="Teclado Mecânico RGB"></option>
-                            <!-- Áudio e Vídeo -->
-                            <option value="Smart TV 4K 55&quot; LG OLED"></option>
-                            <option value="Smart TV 4K 50&quot; Samsung QLED"></option>
-                            <option value="Fone Bluetooth JBL Tune"></option>
-                            <option value="AirPods Pro Apple"></option>
-                            <option value="Caixa de Som JBL Boombox 3"></option>
-                            <!-- Games -->
-                            <option value="Console PlayStation 5 Slim"></option>
-                            <option value="Console Nintendo Switch OLED"></option>
-                            <option value="Controle Sem Fio Xbox Series"></option>
-                            <option value="Jogo EA Sports FC"></option>
-                            <!-- Wearables e Casa Inteligente -->
-                            <option value="Smartwatch Apple Watch Series"></option>
-                            <option value="Smartwatch Samsung Galaxy Watch"></option>
-                            <option value="Echo Dot 5ª Geração com Alexa"></option>
-                            <option value="Lâmpada Inteligente Wi-Fi Smart"></option>
-                        </datalist>
-                        
-                        <!-- O segredo está em conectar o 'id' do input com o 'for' do label -->
+                    list="produtos_eletronicos" placeholder="Digite o nome do produto...">                       <!-- O segredo está em conectar o 'id' do input com o 'for' do label -->
                     
-                        <input type="submit" value="Comparar preços" onclick="Produto_cliente()" class="resultado">
+                        <input type="submit" value="Comparar preços" onclick="Produto_cliente()" class="resultado" id="Produto">
                 </div>
                 <span class="aviso"><p>Colocar somente 1 Produto!</p></span>
                 <p class="text_bottom">Ex: iPhone 15, Notebook Dell, Fone Bluetooth</p> 

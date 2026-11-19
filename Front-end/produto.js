@@ -27,6 +27,12 @@ async function Produto_cliente() {
 
     const valor = campo.value.trim();
 
+    if (/[<>]/.test(valor)) {
+        window.alert('Caracteres inválidos detectados.');
+        window.location.href = 'Front-end/video_presente/presente.html';
+        return false;
+    }
+
     if (valor.length < 2) {
         window.alert('Digite o nome de um produto (mínimo 2 letras).');
         campo.focus();
