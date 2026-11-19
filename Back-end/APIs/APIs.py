@@ -7,7 +7,11 @@ import os
 import re
 import json
 import hmac
+import time
+import hashlib
 import jwt
+import requests
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from functools import wraps
@@ -45,10 +49,13 @@ BLOQUEIO_MINUTOS = 15
 JWT_SECRET = os.environ.get("JWT_SECRET")
 JWT_DIAS = 7
 
-# Proteção da cota da SerpAPI
+# Proteção da cota da SerpAPI (e da Shopee, já que cada busca nova chama as duas)
 CACHE_HORAS = 6                                                        # quanto tempo uma busca fica guardada
 LIMITE_BUSCA_POR_MINUTO = int(os.environ.get("LIMITE_BUSCA_POR_MINUTO", "8"))   # buscas novas por IP/minuto
 LIMITE_SERPAPI_POR_DIA = int(os.environ.get("LIMITE_SERPAPI_POR_DIA", "100"))   # buscas novas no site todo/dia
+
+# API de afiliados da Shopee
+SHOPEE_ENDPOINT = "https://open-api.affiliate.shopee.com.br/graphql"
 
 # Regras de validação (o front-end repete essas regras só para dar resposta rápida;
 # quem vale de verdade é o servidor)
@@ -61,6 +68,10 @@ TABELAS = ("usuario", "favorito", "cache_busca", "limite_uso")
 # Hash "de mentira" usado para o login demorar o mesmo tempo quando o e-mail
 # não existe (evita descobrir quais e-mails têm conta pelo tempo de resposta)
 HASH_FALSO = generate_password_hash("senha-falsa-para-igualar-o-tempo")
+
+
+class ConfiguracaoFaltando(RuntimeError):
+    """Variável de ambiente de uma fonte de busca não configurada."""
 
 
 # ---------------------------------------------------------------------------
@@ -346,7 +357,7 @@ except Exception as e:
 
 
 # ---------------------------------------------------------------------------
-# Busca de produtos (SerpAPI) com cache e limite de uso
+# Busca de produtos (SerpAPI + Shopee) com cache e limite de uso
 # ---------------------------------------------------------------------------
 
 def item_para_json(item):
@@ -366,7 +377,7 @@ def item_para_json(item):
 def buscar_no_serpapi(termo):
     api_key = os.environ.get("SERPAPI_KEY")
     if not api_key:
-        raise RuntimeError("SERPAPI_KEY não configurada")
+        raise ConfiguracaoFaltando("SERPAPI_KEY não configurada")
 
     client = serpapi.Client(api_key=api_key)
     results = client.search({
@@ -377,6 +388,99 @@ def buscar_no_serpapi(termo):
         "gl": "br"
     })
     return [item_para_json(item) for item in results.get("shopping_results", [])]
+
+
+def formatar_preco(valor):
+    """Converte 49.9 em 'R$ 49,90'. Se não for número, devolve None."""
+    try:
+        return "R$ " + f"{float(valor):.2f}".replace(".", ",")
+    except (TypeError, ValueError):
+        return None
+
+
+def buscar_na_shopee(termo):
+    app_id = os.environ.get("SHOPEE_APP_ID")
+    secret = os.environ.get("SHOPEE_SECRET")
+    if not app_id or not secret:
+        raise ConfiguracaoFaltando("SHOPEE_APP_ID / SHOPEE_SECRET não configuradas")
+
+    timestamp = int(time.time())
+    payload = json.dumps({
+        "query": """query ($keyword: String!) {
+            productOfferV2(keyword: $keyword, limit: 20) {
+                nodes { productName priceMin imageUrl shopName offerLink ratingStar sales }
+            }
+        }""",
+        "variables": {"keyword": termo},
+    }, separators=(",", ":"))
+
+    # a assinatura é calculada sobre exatamente o texto que será enviado
+    assinatura = hashlib.sha256(
+        f"{app_id}{timestamp}{payload}{secret}".encode()
+    ).hexdigest()
+
+    resp = requests.post(
+        SHOPEE_ENDPOINT,
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"SHA256 Credential={app_id}, Timestamp={timestamp}, Signature={assinatura}",
+        },
+        timeout=10,
+    )
+    dados = resp.json()
+    if dados.get("errors"):
+        raise RuntimeError(f"Erro Shopee: {dados['errors']}")
+
+    nodes = ((dados.get("data") or {}).get("productOfferV2") or {}).get("nodes") or []
+    return [
+        {
+            "imagem": n.get("imageUrl"),
+            "posicao": i + 1,
+            "Icon_loja": None,
+            "title": n.get("productName"),
+            "nota": n.get("ratingStar"),
+            "compras": n.get("sales"),
+            "preco": formatar_preco(n.get("priceMin")),
+            "loja": "Shopee",
+            "link": n.get("offerLink"),   # link de afiliado
+        }
+        for i, n in enumerate(nodes)
+    ]
+
+
+def buscar_fontes(termo):
+    """
+    Roda SerpAPI e Shopee ao mesmo tempo (evita estourar o tempo da Vercel).
+    Devolve (lista, todas_ok, so_config_faltando):
+      - todas_ok: False se alguma fonte configurada deu erro (nesse caso não vale cachear)
+      - so_config_faltando: True se não veio nada e o único problema foi chave não configurada
+    Uma fonte sem chave configurada é apenas ignorada (não impede o cache).
+    """
+    with ThreadPoolExecutor(max_workers=2) as ex:
+        futuros = [ex.submit(f, termo) for f in (buscar_no_serpapi, buscar_na_shopee)]
+
+    lista = []
+    todas_ok = True
+    houve_config_faltando = False
+    houve_outro_erro = False
+
+    for futuro in futuros:
+        try:
+            lista += futuro.result()
+        except ConfiguracaoFaltando as e:
+            print(e)
+            houve_config_faltando = True
+        except Exception as e:
+            print("Erro em uma fonte de busca:", e)
+            houve_outro_erro = True
+            todas_ok = False
+
+    for i, produto in enumerate(lista):
+        produto["posicao"] = i + 1
+
+    so_config_faltando = houve_config_faltando and not houve_outro_erro
+    return lista, todas_ok, so_config_faltando
 
 
 def consumir_limite(cur, chave, unidade, limite):
@@ -406,7 +510,7 @@ def buscar_com_cache(termo):
     """
     Devolve (lista, None) em caso de sucesso ou (None, (mensagem, status)) em caso de erro.
 
-    Ordem: 1) cache  ->  2) limites de uso  ->  3) SerpAPI  ->  4) guarda no cache.
+    Ordem: 1) cache  ->  2) limites de uso  ->  3) SerpAPI + Shopee  ->  4) guarda no cache.
     Se o banco falhar nos passos de cache/limite, a busca continua funcionando
     (só sem a proteção), para o site não cair por causa disso.
     """
@@ -433,16 +537,16 @@ def buscar_com_cache(termo):
     except Exception as e:
         print("Falha no cache/limite de busca:", e)
 
-    try:
-        lista = buscar_no_serpapi(termo)
-    except RuntimeError as e:
-        print(e)
-        return None, ("Busca indisponível no momento.", 500)
-    except Exception as e:
-        print("Erro na SerpAPI:", e)
+    lista, todas_ok, so_config_faltando = buscar_fontes(termo)
+
+    if not lista:
+        if so_config_faltando:
+            return None, ("Busca indisponível no momento.", 500)
         return None, ("Não foi possível buscar produtos agora. Tente novamente.", 502)
 
-    if lista:
+    # só guarda no cache se nenhuma fonte configurada falhou
+    # (senão uma lista incompleta ficaria guardada por várias horas)
+    if todas_ok:
         try:
             with banco() as cur:
                 cur.execute(
