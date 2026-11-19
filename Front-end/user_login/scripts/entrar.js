@@ -1,11 +1,7 @@
 // ===== PÁGINA DE LOGIN =====
-
-//script detectando invazão
- const valor = campo.value.trim();
-
-if (!validarEntrada(valor)) return;
-
 async function handleGoogleLogin(response) {
+
+
     try {
         const resposta = await fetch('/api/login-google', {
             method: 'POST',
@@ -66,6 +62,9 @@ async function entrar(event) {
     // (espaço pode fazer parte da senha).
     const email = document.getElementById('iemail').value.trim();
     const senha = document.getElementById('isenha').value;
+
+    //detecta invazão
+     if (!validarEntrada(email)) return false;
 
     // 2. Campos vazios
     if (email === '' || senha === '') {

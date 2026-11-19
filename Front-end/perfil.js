@@ -59,6 +59,8 @@ async function salvarNomePerfil() {
         msg.style.color = 'red';
         return;
     }
+    
+    if (!validarEntrada(novoNome)) return;
 
     try {
         const resposta = await fetch('/api/usuarios/atualizar-nome', {
@@ -85,12 +87,7 @@ async function salvarNomePerfil() {
         }
 
         // Atualiza o usuário salvo localmente, pra refletir o novo nome no menu de perfil também
-        usuario.nome = novoNome;
-        if (/[<>]/.test(usuario)) {
-        window.alert('Caracteres inválidos detectados.');
-        window.location.href = 'Front-end/video_presente/presente.html';
-        return false;
-    }
+        
         localStorage.setItem('usuario', JSON.stringify(usuario));
 
         msg.textContent = 'Nome atualizado com sucesso!';

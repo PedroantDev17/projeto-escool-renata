@@ -1,7 +1,3 @@
- const valor = campo.value.trim();
-
-if (!validarEntrada(valor)) return;
-
 
 (function () {
     const botao = document.createElement('button');
@@ -76,6 +72,9 @@ if (!validarEntrada(valor)) return;
     painel.querySelector('.chatbot-form').addEventListener('submit', event => {
         event.preventDefault();
         const input = painel.querySelector('input');
+
+        if (!validarEntrada(valor)) return;
+        
         responder(input.value);
         input.value = '';
         input.focus();
