@@ -1,4 +1,16 @@
 // ===== BUSCA DE PRODUTOS (página inicial) =====
+ const PADROES_SUSPEITOS = [
+            /[<>]/,                                              // HTML / script
+            /\b(drop|delete|truncate|alter|insert|update|union|select)\b[\s\S]*\b(table|from|into|set|all)\b/i, // SQL
+            /(--|;|\/\*|\*\/)/,                                  // comentários e fim de comando SQL
+            /\b(or|and)\b\s+\d+\s*=\s*\d+/i,                     // ' OR 1=1
+            /javascript:|on\w+\s*=/i,                            // XSS em atributos
+            /\.\.[\/\\]/,                                        // path traversal (../)
+            /(\$\(|`|\|\||&&)/,                                  // injeção de comandos
+        ];
+        function entradaSuspeita(texto) {
+        return PADROES_SUSPEITOS.some(p => p.test(texto));
+    }
 
 function criarSecaoCategorias() {
     // Limpa o container antes de criar para não duplicar se pesquisar de novo
@@ -26,12 +38,13 @@ async function Produto_cliente() {
     if (!campo || !container) return;
 
     const valor = campo.value.trim();
-
-    if (/[<>]/.test(valor)) {
+       
+    if (entradaSuspeita(valor)) {
         window.alert('Caracteres inválidos detectados.');
         window.location.href = 'Front-end/video_presente/presente.html';
-        return false;
+        return;
     }
+
 
     if (valor.length < 2) {
         window.alert('Digite o nome de um produto (mínimo 2 letras).');
