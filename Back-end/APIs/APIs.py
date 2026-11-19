@@ -102,6 +102,14 @@ def limpar_url(valor, tamanho_max):
     return valor
 
 
+def limpar_imagem(valor, tamanho_max):
+    """Normaliza URLs de imagem protocol-relative antes da validação HTTP(S)."""
+    valor = texto(valor)
+    if valor.startswith("//"):
+        valor = "https:" + valor
+    return limpar_url(valor, tamanho_max)
+
+
 def ip_do_cliente():
     # Na Vercel o IP real vem nesses cabeçalhos (a própria Vercel os define)
     ip = request.headers.get("x-vercel-forwarded-for") or request.headers.get("x-forwarded-for") or ""
@@ -413,6 +421,7 @@ except Exception as e:
 
 def item_para_json(item):
     return {
+        "origem": "google_shopping",
         "imagem": item.get("thumbnail"),
         "posicao": item.get("position"),
         "Icon_loja": item.get("source_icon"),
@@ -442,7 +451,23 @@ def buscar_no_serpapi(termo):
     results = resp.json()
     if results.get("error"):
         raise RuntimeError("SerpAPI retornou erro")
-    return [item_para_json(item) for item in results.get("shopping_results", [])]
+
+    def eh_shopee(item):
+        loja = texto(item.get("source")).lower()
+        link = texto(item.get("product_link"))
+        try:
+            dominio = (urlsplit(link).hostname or "").lower()
+        except ValueError:
+            dominio = ""
+        return "shopee" in loja or dominio == "shopee.com.br" or dominio.endswith(".shopee.com.br")
+
+    # A Shopee afiliada é consultada separadamente; remove ofertas da Shopee
+    # que também aparecem misturadas nos resultados do Google Shopping.
+    return [
+        item_para_json(item)
+        for item in results.get("shopping_results", [])
+        if not eh_shopee(item)
+    ]
 
 
 def formatar_preco(valor):
@@ -490,7 +515,8 @@ def buscar_na_shopee(termo):
     nodes = ((dados.get("data") or {}).get("productOfferV2") or {}).get("nodes") or []
     return [
         {
-            "imagem": n.get("imageUrl"),
+            "origem": "shopee_afiliados",
+            "imagem": limpar_imagem(n.get("imageUrl"), 500),
             "posicao": i + 1,
             "Icon_loja": None,
             "title": n.get("productName"),
@@ -569,7 +595,9 @@ def buscar_com_cache(termo):
     Se o banco falhar nos passos de cache/limite, a busca continua funcionando
     (só sem a proteção), para o site não cair por causa disso.
     """
-    chave = " ".join(termo.lower().split())[:200]
+    # v2 força atualizar caches antigos que ainda misturavam Shopee do Google
+    # com as ofertas da API de afiliados.
+    chave = "v2:" + " ".join(termo.lower().split())[:196]
 
     try:
         with banco() as cur:
