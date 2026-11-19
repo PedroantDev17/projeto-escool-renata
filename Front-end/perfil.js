@@ -87,8 +87,8 @@ async function salvarNomePerfil() {
         }
 
         // Atualiza o usuário salvo localmente, pra refletir o novo nome no menu de perfil também
-        
-        localStorage.setItem('usuario', JSON.stringify(usuario));
+        usuario.nome = novoNome;
+        localStorage.setItem('usuario',                     JSON.stringify(usuario));
 
         msg.textContent = 'Nome atualizado com sucesso!';
         msg.style.color = 'green';
