@@ -88,10 +88,12 @@ function fotoDoUsuario(usuario) {
 // opcoes.modo: 'busca' (botão de favoritar) ou 'favorito' (botão de remover)
 function criarCardProduto(item, opcoes = {}) {
     const titulo = item.title || item.titulo || '';
-    const imagem = urlSegura(item.imagem);
-    const logo = urlSegura(item.Icon_loja);
-    const link = urlSegura(item.link);
     const loja = item.loja || '';
+    const imagem = urlSegura(item.imagem);
+    const logo = String(loja).toLowerCase().includes('shopee')
+        ? '/Front-end/imagem/shopee.svg'
+        : urlSegura(item.Icon_loja);
+    const link = urlSegura(item.link);
 
     let botao;
     if (opcoes.modo === 'favorito') {
