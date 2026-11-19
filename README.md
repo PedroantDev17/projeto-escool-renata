@@ -9,6 +9,7 @@ Site que compara preços de produtos em várias lojas. Projeto escolar.
 - Cadastro e login com e-mail/senha ou com a conta Google
 - Favoritos, perfil (trocar nome) e configurações (excluir conta)
 - Segurança: senha com hash, login com token (JWT), bloqueio temporário após 5 senhas erradas, banco com RLS ligado
+- Sessões invalidáveis no logout/exclusão, limites de requisição por IP e timeout nas consultas externas
 
 ## Como está organizado
 ```
@@ -34,6 +35,8 @@ HTML, CSS e JavaScript · Python + Flask · Postgres (Supabase) · SerpAPI · Go
 | `ALLOWED_ORIGINS` | *(opcional)* domínios extras liberados no CORS, separados por vírgula |
 | `LIMITE_BUSCA_POR_MINUTO` | *(opcional)* buscas novas por IP por minuto (padrão 8) |
 | `LIMITE_SERPAPI_POR_DIA` | *(opcional)* buscas novas no site todo por dia (padrão 100) |
+| `LIMITE_LOGIN_IP_POR_MINUTO` | *(opcional)* tentativas de login por IP por minuto (padrão 20) |
+| `LIMITE_CADASTRO_IP_POR_HORA` | *(opcional)* cadastros por IP por hora (padrão 5) |
 
 ## Publicar
 ```

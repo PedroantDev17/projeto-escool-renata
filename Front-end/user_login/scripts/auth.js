@@ -27,8 +27,19 @@ function toggleMenu() {
     if (menu) menu.classList.toggle('ativo');
 }
 
-function sair(event) {
+async function sair(event) {
     if (event) event.preventDefault();
+    const usuario = getUsuarioLogado();
+    if (usuario && usuario.token) {
+        try {
+            await fetch('/api/usuarios/logout', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + usuario.token }
+            });
+        } catch (erro) {
+            console.error('Não foi possível invalidar a sessão no servidor:', erro);
+        }
+    }
     localStorage.removeItem('usuario');
     location.reload();
 }

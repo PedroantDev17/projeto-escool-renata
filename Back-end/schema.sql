@@ -17,6 +17,13 @@ CREATE TABLE IF NOT EXISTS usuario (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS idx_usuario_gmail_unico ON usuario (gmail);
 
+-- Versão persistente de sessão: permanece após excluir a conta para impedir
+-- que um JWT antigo volte a funcionar se o mesmo e-mail for cadastrado.
+CREATE TABLE IF NOT EXISTS sessao_usuario (
+    gmail   VARCHAR(250) PRIMARY KEY,
+    versao  INTEGER NOT NULL DEFAULT 0
+);
+
 CREATE TABLE IF NOT EXISTS favorito (
     id_favorito   SERIAL PRIMARY KEY,
     gmail_usuario VARCHAR(250),
@@ -50,6 +57,7 @@ ALTER TABLE usuario     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE favorito    ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cache_busca ENABLE ROW LEVEL SECURITY;
 ALTER TABLE limite_uso  ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sessao_usuario ENABLE ROW LEVEL SECURITY;
 
 -- ------------------------------------------------------------
 -- Só para bancos ANTIGOS (criados antes das colunas novas).

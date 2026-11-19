@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
-import serpapi
 import psycopg2
 from psycopg2 import sql
 import os
@@ -43,6 +42,8 @@ CORS(app, resources={r"/api/*": {"origins": ORIGENS_PERMITIDAS}})
 # Limite de tentativas de login por senha
 MAX_TENTATIVAS = 5
 BLOQUEIO_MINUTOS = 15
+LIMITE_LOGIN_IP_POR_MINUTO = int(os.environ.get("LIMITE_LOGIN_IP_POR_MINUTO", "20"))
+LIMITE_CADASTRO_IP_POR_HORA = int(os.environ.get("LIMITE_CADASTRO_IP_POR_HORA", "5"))
 
 # Token de login (JWT). JWT_SECRET deve ser uma string longa e aleatória,
 # configurada nas variáveis de ambiente da Vercel.
@@ -63,7 +64,7 @@ EMAIL_RE = re.compile(r"^[^@\s<>]+@[^@\s<>]+\.[^@\s<>]+$")
 SENHA_RE = re.compile(r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,128}$")
 NOME_MAX = 50
 
-TABELAS = ("usuario", "favorito", "cache_busca", "limite_uso")
+TABELAS = ("usuario", "favorito", "cache_busca", "limite_uso", "sessao_usuario")
 
 # Hash "de mentira" usado para o login demorar o mesmo tempo quando o e-mail
 # não existe (evita descobrir quais e-mails têm conta pelo tempo de resposta)
@@ -108,13 +109,47 @@ def ip_do_cliente():
     return ip or request.remote_addr or "desconhecido"
 
 
-def gerar_token(email):
+def chave_ip(prefixo):
+    # Hash evita armazenar endereços IP em claro na tabela de limites.
+    return prefixo + ":" + hashlib.sha256(ip_do_cliente().encode()).hexdigest()[:64]
+
+
+def limitar_por_ip(prefixo, unidade, limite):
+    try:
+        with banco() as cur:
+            return consumir_limite(cur, chave_ip(prefixo), unidade, limite)
+    except Exception as e:
+        # Se a tabela de limites estiver indisponível, falha fechada nas rotas
+        # que protegem credenciais e custos externos.
+        print("Falha no limite por IP:", e)
+        return False
+
+
+def obter_versao_sessao(email, incrementar=False):
+    with banco() as cur:
+        cur.execute(
+            "INSERT INTO sessao_usuario (gmail, versao) VALUES (%s, 0) ON CONFLICT (gmail) DO NOTHING",
+            (email,)
+        )
+        if incrementar:
+            cur.execute(
+                "UPDATE sessao_usuario SET versao = versao + 1 WHERE gmail = %s RETURNING versao",
+                (email,)
+            )
+        else:
+            cur.execute("SELECT versao FROM sessao_usuario WHERE gmail = %s", (email,))
+        linha = cur.fetchone()
+        return linha[0]
+
+
+def gerar_token(email, versao=None):
     if not JWT_SECRET:
         raise RuntimeError("JWT_SECRET não configurada")
 
     agora = datetime.now(timezone.utc)
     payload = {
         "email": email,
+        "ver": obter_versao_sessao(email) if versao is None else versao,
         "iat": agora,
         "exp": agora + timedelta(days=JWT_DIAS)
     }
@@ -150,12 +185,19 @@ def exigir_login(f):
         try:
             dados = jwt.decode(
                 cabecalho[7:], JWT_SECRET, algorithms=["HS256"],
-                options={"require": ["exp", "email"]}
+                options={"require": ["exp", "email", "ver"]}
             )
         except jwt.InvalidTokenError:
             return jsonify({"erro": "Sessão inválida ou expirada. Faça login novamente."}), 401
 
         g.email = dados["email"]
+        try:
+            versao_atual = obter_versao_sessao(g.email)
+        except Exception as e:
+            print("Falha ao validar versão da sessão:", e)
+            return jsonify({"erro": "Não foi possível validar sua sessão agora."}), 503
+        if dados["ver"] != versao_atual:
+            return jsonify({"erro": "Sessão encerrada. Faça login novamente."}), 401
         return f(*args, **kwargs)
     return wrapper
 
@@ -266,6 +308,15 @@ def criar_tabelas_se_nao_existirem():
 
         # impede duas contas com o mesmo e-mail, seja criada por senha ou por Google
         cur.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_usuario_gmail_unico ON usuario (gmail)")
+
+        # Mantém a versão mesmo depois da exclusão da conta para impedir que
+        # tokens antigos voltem a funcionar se o mesmo e-mail for recadastrado.
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS sessao_usuario (
+            gmail VARCHAR(250) PRIMARY KEY,
+            versao INTEGER NOT NULL DEFAULT 0
+        )
+        """)
 
         cur.execute("""
         CREATE TABLE IF NOT EXISTS favorito (
@@ -379,14 +430,18 @@ def buscar_no_serpapi(termo):
     if not api_key:
         raise ConfiguracaoFaltando("SERPAPI_KEY não configurada")
 
-    client = serpapi.Client(api_key=api_key)
-    results = client.search({
-        "engine": "google_shopping",
-        "q": termo,
-        "location": "Brazil",
-        "hl": "pt-br",
-        "gl": "br"
-    })
+    resp = requests.get(
+        "https://serpapi.com/search.json",
+        params={
+            "engine": "google_shopping", "q": termo, "location": "Brazil",
+            "hl": "pt-br", "gl": "br", "api_key": api_key
+        },
+        timeout=(3, 8),
+    )
+    resp.raise_for_status()
+    results = resp.json()
+    if results.get("error"):
+        raise RuntimeError("SerpAPI retornou erro")
     return [item_para_json(item) for item in results.get("shopping_results", [])]
 
 
@@ -529,7 +584,7 @@ def buscar_com_cache(termo):
             if linha:
                 return json.loads(linha[0]), None
 
-            if not consumir_limite(cur, "ip:" + ip_do_cliente(), "minute", LIMITE_BUSCA_POR_MINUTO):
+            if not consumir_limite(cur, chave_ip("busca"), "minute", LIMITE_BUSCA_POR_MINUTO):
                 return None, ("Muitas buscas seguidas. Aguarde um minuto e tente de novo.", 429)
 
             if not consumir_limite(cur, "total", "day", LIMITE_SERPAPI_POR_DIA):
@@ -575,6 +630,9 @@ def lista_produtos():
     if len(produto) < 2 or len(produto) > 100:
         return jsonify({"erro": "O nome do produto deve ter entre 2 e 100 caracteres"}), 400
 
+    if not limitar_por_ip("busca-req", "minute", LIMITE_BUSCA_POR_MINUTO * 2):
+        return jsonify({"erro": "Muitas buscas seguidas. Aguarde um minuto e tente de novo."}), 429
+
     lista, erro = buscar_com_cache(produto)
     if erro:
         return jsonify({"erro": erro[0]}), erro[1]
@@ -584,6 +642,8 @@ def lista_produtos():
 
 @app.route('/api/categoria', methods=['POST'])
 def categoria():
+    if not limitar_por_ip("busca-req", "minute", LIMITE_BUSCA_POR_MINUTO * 2):
+        return jsonify({"erro": "Muitas buscas seguidas. Aguarde um minuto e tente de novo."}), 429
     lista, erro = buscar_com_cache("eletronicos")
     if erro:
         return jsonify({"erro": erro[0]}), erro[1]
@@ -597,6 +657,8 @@ def categoria():
 
 @app.route('/api/usuarios', methods=['POST'])
 def users():
+    if not limitar_por_ip("cadastro", "hour", LIMITE_CADASTRO_IP_POR_HORA):
+        return jsonify({"erro": "Limite de cadastros atingido. Tente novamente mais tarde."}), 429
     info_users = request.get_json(silent=True) or {}
 
     nome = texto(info_users.get("nome"))
@@ -685,6 +747,8 @@ def login_google():
 
 @app.route('/api/login', methods=['POST'])
 def login():
+    if not limitar_por_ip("login", "minute", LIMITE_LOGIN_IP_POR_MINUTO):
+        return jsonify({"autenticado": False, "erro": "Muitas tentativas. Aguarde um minuto e tente novamente."}), 429
     login_json = request.get_json(silent=True) or {}
 
     email_user = normalizar_email(login_json.get("email"))
@@ -724,11 +788,9 @@ def login():
 
         nome_login, gmail_login, senha_db, foto_login, segundos_bloqueio = resultado
 
-        # 1) Conta bloqueada? Recusa mesmo que a senha esteja certa
-        if segundos_bloqueio > 0:
-            return resposta_bloqueio(segundos_bloqueio)
-
-        # 2) Confere a senha. Aceita o hash novo e também contas antigas
+        # Confere a senha antes do lockout: quem conhece a senha correta pode
+        # entrar mesmo durante o período, evitando que terceiros travem a conta.
+        # Aceita o hash novo e também contas antigas
         # com senha em texto puro (que são convertidas para hash no login).
         senha_ok = False
         precisa_migrar = False
@@ -760,7 +822,11 @@ def login():
                 "token": gerar_token(gmail_login)
             })
 
-        # 3) Senha errada: incrementa; ao atingir o limite, bloqueia e zera o contador
+        # Durante o bloqueio, não renova o prazo e não bloqueia a senha correta.
+        if segundos_bloqueio > 0:
+            return resposta_bloqueio(segundos_bloqueio)
+
+        # Senha errada: incrementa; ao atingir o limite, bloqueia e zera o contador.
         cur.execute(
             """
             UPDATE usuario
@@ -850,7 +916,7 @@ def listar_favoritos():
         )
         resultados = cur.fetchall()
 
-    return jsonify([
+    resposta = jsonify([
         {
             "id_favorito": linha[0],
             "titulo": linha[1],
@@ -861,6 +927,8 @@ def listar_favoritos():
         }
         for linha in resultados
     ])
+    resposta.headers["Cache-Control"] = "private, no-store"
+    return resposta
 
 
 @app.route('/api/favoritos/remover', methods=['POST'])
@@ -878,6 +946,8 @@ def remover_favorito():
             "DELETE FROM favorito WHERE id_favorito = %s AND gmail_usuario = %s",
             (id_favorito, g.email)
         )
+        if cur.rowcount == 0:
+            return jsonify({"erro": "Favorito não encontrado."}), 404
 
     return jsonify({"mensagem": "Favorito removido com sucesso"})
 
@@ -906,12 +976,26 @@ def atualizar_nome():
 @exigir_login
 def excluir_conta():
     with banco() as cur:
+        cur.execute(
+            "INSERT INTO sessao_usuario (gmail, versao) VALUES (%s, 0) ON CONFLICT (gmail) DO NOTHING",
+            (g.email,)
+        )
+        cur.execute("UPDATE sessao_usuario SET versao = versao + 1 WHERE gmail = %s", (g.email,))
         # remove os favoritos primeiro (não há chave estrangeira ligando as tabelas,
         # então isso precisa ser feito manualmente antes de apagar o usuário)
         cur.execute("DELETE FROM favorito WHERE gmail_usuario = %s", (g.email,))
         cur.execute("DELETE FROM usuario WHERE gmail = %s", (g.email,))
 
     return jsonify({"mensagem": "Conta excluída com sucesso"})
+
+
+@app.route('/api/usuarios/logout', methods=['POST'])
+@exigir_login
+def logout():
+    obter_versao_sessao(g.email, incrementar=True)
+    resposta = jsonify({"mensagem": "Sessão encerrada"})
+    resposta.headers["Cache-Control"] = "private, no-store"
+    return resposta
 
 
 if __name__ == '__main__':
